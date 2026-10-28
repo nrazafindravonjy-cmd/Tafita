@@ -1,0 +1,5 @@
+{
+  "tabs": { "map": "Map", "discover": "Discover" },
+  "map": { "title": "Map", "subtitle": "Places across Madagascar will appear here." },
+  "discover": { "title": "Discover", "subtitle": "Places, hidden gems and Malagasy culture." }
+}
