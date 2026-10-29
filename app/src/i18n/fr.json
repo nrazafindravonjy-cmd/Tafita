@@ -1,5 +1,17 @@
 {
-  "tabs": { "map": "Carte", "discover": "Découvrir" },
-  "map": { "title": "Carte", "subtitle": "Les lieux de Madagascar apparaîtront ici." },
-  "discover": { "title": "Découvrir", "subtitle": "Lieux, pépites et culture malgache." }
+  "tabs": {
+    "map": "Carte",
+    "discover": "Découvrir"
+  },
+  "map": {
+    "title": "Carte",
+    "subtitle": "Les lieux de Madagascar apparaîtront ici."
+  },
+  "discover": {
+    "title": "Découvrir",
+    "subtitle": "Lieux, pépites et culture malgache."
+  },
+  "common": {
+    "loadError": "Impossible de charger les données."
+  }
 }
