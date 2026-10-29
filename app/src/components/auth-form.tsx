@@ -19,6 +19,12 @@ export function AuthForm() {
   const [busy, setBusy] = useState(false);
 
   async function submit() {
+    // Validated here rather than by disabling the button, because browsers
+    // hide autofilled values from the page until the user interacts with it.
+    if (!email.trim() || !password || (mode === 'signUp' && !name.trim())) {
+      setError(t('auth.missingFields'));
+      return;
+    }
     setBusy(true);
     setError(null);
     const result =
@@ -51,7 +57,7 @@ export function AuthForm() {
         autoComplete={mode === 'signUp' ? 'new-password' : 'current-password'}
       />
       {error && <ThemedText style={styles.error}>{error}</ThemedText>}
-      <Button label={t(`auth.${mode}.submit`)} onPress={submit} disabled={busy || !email || !password} />
+      <Button label={t(`auth.${mode}.submit`)} onPress={submit} disabled={busy} />
       <Button
         secondary
         label={t(`auth.${mode}.switch`)}

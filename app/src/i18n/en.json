@@ -47,6 +47,7 @@
       "title": "Create an account",
       "submit": "Sign up",
       "switch": "Already have an account? Sign in"
-    }
+    },
+    "missingFields": "Please fill in all fields."
   }
 }
