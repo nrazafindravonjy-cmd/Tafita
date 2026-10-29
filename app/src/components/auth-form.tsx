@@ -27,12 +27,18 @@ export function AuthForm() {
     }
     setBusy(true);
     setError(null);
-    const result =
-      mode === 'signUp'
-        ? await neon.auth.signUp.email({ name: name.trim(), email: email.trim(), password })
-        : await neon.auth.signIn.email({ email: email.trim(), password });
-    if (result.error) setError(result.error.message ?? t('auth.genericError'));
-    setBusy(false);
+    try {
+      const result =
+        mode === 'signUp'
+          ? await neon.auth.signUp.email({ name: name.trim(), email: email.trim(), password })
+          : await neon.auth.signIn.email({ email: email.trim(), password });
+      if (result.error) setError(result.error.message ?? t('auth.genericError'));
+    } catch (thrown) {
+      // Network and origin failures throw instead of returning an error.
+      setError(thrown instanceof Error ? thrown.message : t('auth.genericError'));
+    } finally {
+      setBusy(false);
+    }
   }
 
   return (
