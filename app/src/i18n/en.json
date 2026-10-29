@@ -1,7 +1,8 @@
 {
   "tabs": {
     "map": "Map",
-    "discover": "Discover"
+    "discover": "Discover",
+    "profile": "Profile"
   },
   "map": {
     "title": "Map",
@@ -17,5 +18,35 @@
   },
   "common": {
     "loadError": "Could not load data."
+  },
+  "profile": {
+    "title": "Profile",
+    "subtitle": "Your Tafita account.",
+    "chooseUsername": "Choose your username, shown on your reviews.",
+    "username": "Username",
+    "save": "Save",
+    "usernameTaken": "This username is taken or invalid (3 to 30 characters).",
+    "signOut": "Sign out",
+    "languages": {
+      "fr": "Français",
+      "en": "English"
+    }
+  },
+  "auth": {
+    "subtitle": "Sign in to review places and share your own.",
+    "name": "Name",
+    "email": "Email",
+    "password": "Password",
+    "genericError": "Something went wrong, please try again.",
+    "signIn": {
+      "title": "Sign in",
+      "submit": "Sign in",
+      "switch": "No account yet? Create one"
+    },
+    "signUp": {
+      "title": "Create an account",
+      "submit": "Sign up",
+      "switch": "Already have an account? Sign in"
+    }
   }
 }

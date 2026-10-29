@@ -27,6 +27,9 @@ export default function AppTabs() {
           <TabTrigger name="discover" href="/discover" asChild>
             <TabButton>{t('tabs.discover')}</TabButton>
           </TabTrigger>
+          <TabTrigger name="profile" href="/profile" asChild>
+            <TabButton>{t('tabs.profile')}</TabButton>
+          </TabTrigger>
         </CustomTabList>
       </TabList>
     </Tabs>

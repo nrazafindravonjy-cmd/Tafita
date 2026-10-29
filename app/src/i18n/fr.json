@@ -1,7 +1,8 @@
 {
   "tabs": {
     "map": "Carte",
-    "discover": "Découvrir"
+    "discover": "Découvrir",
+    "profile": "Profil"
   },
   "map": {
     "title": "Carte",
@@ -17,5 +18,35 @@
   },
   "common": {
     "loadError": "Impossible de charger les données."
+  },
+  "profile": {
+    "title": "Profil",
+    "subtitle": "Votre compte Tafita.",
+    "chooseUsername": "Choisissez votre nom d'utilisateur, visible sur vos avis.",
+    "username": "Nom d'utilisateur",
+    "save": "Enregistrer",
+    "usernameTaken": "Ce nom d'utilisateur est déjà pris ou invalide (3 à 30 caractères).",
+    "signOut": "Se déconnecter",
+    "languages": {
+      "fr": "Français",
+      "en": "English"
+    }
+  },
+  "auth": {
+    "subtitle": "Connectez-vous pour donner votre avis et partager des lieux.",
+    "name": "Nom",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "genericError": "Une erreur est survenue, réessayez.",
+    "signIn": {
+      "title": "Connexion",
+      "submit": "Se connecter",
+      "switch": "Pas encore de compte ? Créer un compte"
+    },
+    "signUp": {
+      "title": "Créer un compte",
+      "submit": "S'inscrire",
+      "switch": "Déjà un compte ? Se connecter"
+    }
   }
 }
