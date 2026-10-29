@@ -7,7 +7,7 @@ Le cadrage du produit se trouve dans [docs/CADRAGE.md](docs/CADRAGE.md).
 ## Structure
 
 - `app/` contient l'application Expo (iOS, Android et web).
-- `supabase/migrations/` contient le schéma de la base de données.
+- `db/migrations/` contient le schéma de la base de données.
 - `docs/` contient la documentation produit.
 
 ## Démarrer

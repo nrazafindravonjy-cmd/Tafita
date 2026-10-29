@@ -28,20 +28,20 @@ Le MVP comporte six écrans : la carte, l'onglet Découvrir (liste et recherche)
 | Besoin | Choix | Raison |
 |---|---|---|
 | Application | Expo (React Native, TypeScript) | un seul code pour iOS, Android et web |
-| Backend | Supabase (Postgres, PostGIS, Auth) | offre gratuite généreuse et recherche géographique native |
+| Backend | Neon (Postgres, PostGIS, Neon Auth, Data API) | offre gratuite sans mise en pause et recherche géographique native |
 | Carte | MapLibre + tuiles OpenFreeMap | gratuit, sans clé ni quota |
 | Photos | Cloudflare R2 | 10 Go gratuits et aucun frais de bande passante |
 | Traductions | i18next + expo-localization | langue détectée sur l'appareil, français par défaut |
 
-Le modèle de données est défini dans `supabase/migrations/20261028000000_init.sql`, et les règles d'accès (RLS) garantissent qu'un lieu proposé reste invisible au public tant qu'un modérateur ne l'a pas publié.
+Le modèle de données est défini dans `db/migrations/20261028000000_init.sql`, et les règles d'accès (RLS) garantissent qu'un lieu proposé reste invisible au public tant qu'un modérateur ne l'a pas publié.
 
 ## Coûts
 
-Le développement est gratuit. Les seules dépenses inévitables sont la publication sur Google Play (25 $ une fois) et sur l'App Store (99 $ par an), auxquelles s'ajoutera Supabase Pro (25 $ par mois) au lancement, car un projet gratuit se met en pause après une semaine d'inactivité.
+Le développement est gratuit. Les seules dépenses inévitables sont la publication sur Google Play (25 $ une fois) et sur l'App Store (99 $ par an), tandis que Neon reste gratuit au lancement, puisque sa base s'endort sans être mise en pause.
 
 ## Feuille de route
 
-1. **Fondations** (fait) : projet Expo, navigation, traductions, client Supabase et schéma de base.
+1. **Fondations** (fait) : projet Expo, navigation, traductions, client de données et schéma de base.
 2. **Carte** : intégration de MapLibre, affichage des lieux et fiche lieu.
 3. **Comptes** : authentification et profil.
 4. **Avis et photos** : rédaction d'avis et envoi de photos compressées vers R2.
