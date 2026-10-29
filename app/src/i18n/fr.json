@@ -5,7 +5,11 @@
   },
   "map": {
     "title": "Carte",
-    "subtitle": "Touchez un repère pour découvrir le lieu."
+    "subtitle": "Touchez un repère pour découvrir le lieu.",
+    "layers": {
+      "plan": "Plan",
+      "satellite": "Satellite"
+    }
   },
   "discover": {
     "title": "Découvrir",

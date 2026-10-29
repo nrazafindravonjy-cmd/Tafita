@@ -5,7 +5,11 @@
   },
   "map": {
     "title": "Map",
-    "subtitle": "Tap a marker to discover the place."
+    "subtitle": "Tap a marker to discover the place.",
+    "layers": {
+      "plan": "Map",
+      "satellite": "Satellite"
+    }
   },
   "discover": {
     "title": "Discover",
