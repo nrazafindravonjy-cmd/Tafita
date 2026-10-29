@@ -6,7 +6,7 @@
   },
   "map": {
     "title": "Map",
-    "subtitle": "Tap a marker to discover the place.",
+    "subtitle": "Tap a marker to see the place, its photos and reviews.",
     "layers": {
       "plan": "Map",
       "satellite": "Satellite"
@@ -49,5 +49,18 @@
       "switch": "Already have an account? Sign in"
     },
     "missingFields": "Please fill in all fields."
+  },
+  "place": {
+    "close": "Close",
+    "noReviews": "No reviews yet.",
+    "rating": "★ {{average}} · {{count}} reviews",
+    "signInToReview": "Sign in from the Profile tab to review this place.",
+    "usernameFirst": "Choose your username in the Profile tab first.",
+    "yourReview": "Your review",
+    "pickRating": "Pick a rating from 1 to 5 stars.",
+    "comment": "Your comment (optional)",
+    "addPhotos": "Add photos ({{count}})",
+    "publish": "Publish",
+    "alreadyReviewed": "You have already reviewed this place."
   }
 }

@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
@@ -7,13 +7,15 @@ import type { PlaceMarker } from '@/lib/places';
 
 // The native map needs a development build with MapLibre Native; until then
 // the mobile app lists the same places.
-export function PlacesMap({ places }: { places: PlaceMarker[] }) {
+type PlacesMapProps = { places: PlaceMarker[]; onSelect: (placeId: string) => void };
+
+export function PlacesMap({ places, onSelect }: PlacesMapProps) {
   return (
     <ThemedView style={styles.list}>
       {places.map((place) => (
-        <ThemedText key={place.id}>
-          {place.region ? `${place.name} · ${place.region}` : place.name}
-        </ThemedText>
+        <Pressable key={place.id} accessibilityRole="button" onPress={() => onSelect(place.id)}>
+          <ThemedText>{place.region ? `${place.name} · ${place.region}` : place.name}</ThemedText>
+        </Pressable>
       ))}
     </ThemedView>
   );

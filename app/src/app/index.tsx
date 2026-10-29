@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { PlaceDetails } from '@/components/place-details';
 import { PlacesMap } from '@/components/places-map';
 import { Screen } from '@/components/screen';
 import { ThemedText } from '@/components/themed-text';
@@ -10,6 +11,7 @@ export default function MapScreen() {
   const { t } = useTranslation();
   const [places, setPlaces] = useState<PlaceMarker[]>([]);
   const [failed, setFailed] = useState(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
 
   useEffect(() => {
     fetchPlaceMarkers()
@@ -20,7 +22,8 @@ export default function MapScreen() {
   return (
     <Screen title={t('map.title')} subtitle={t('map.subtitle')}>
       {failed && <ThemedText themeColor="textSecondary">{t('common.loadError')}</ThemedText>}
-      <PlacesMap places={places} />
+      <PlacesMap places={places} onSelect={setSelectedId} />
+      {selectedId && <PlaceDetails key={selectedId} placeId={selectedId} onClose={() => setSelectedId(null)} />}
     </Screen>
   );
 }

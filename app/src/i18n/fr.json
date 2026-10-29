@@ -6,7 +6,7 @@
   },
   "map": {
     "title": "Carte",
-    "subtitle": "Touchez un repère pour découvrir le lieu.",
+    "subtitle": "Touchez un repère pour voir le lieu, ses photos et ses avis.",
     "layers": {
       "plan": "Plan",
       "satellite": "Satellite"
@@ -49,5 +49,18 @@
       "switch": "Déjà un compte ? Se connecter"
     },
     "missingFields": "Remplissez tous les champs."
+  },
+  "place": {
+    "close": "Fermer",
+    "noReviews": "Pas encore d'avis.",
+    "rating": "★ {{average}} · {{count}} avis",
+    "signInToReview": "Connectez-vous dans l’onglet Profil pour donner votre avis.",
+    "usernameFirst": "Choisissez d'abord votre nom d'utilisateur dans l’onglet Profil.",
+    "yourReview": "Votre avis",
+    "pickRating": "Choisissez une note de 1 à 5 étoiles.",
+    "comment": "Votre commentaire (facultatif)",
+    "addPhotos": "Ajouter des photos ({{count}})",
+    "publish": "Publier",
+    "alreadyReviewed": "Vous avez déjà donné votre avis sur ce lieu."
   }
 }

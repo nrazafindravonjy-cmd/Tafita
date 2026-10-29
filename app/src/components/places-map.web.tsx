@@ -38,7 +38,9 @@ async function buildSatelliteStyle(): Promise<maplibregl.StyleSpecification> {
 
 type BaseLayer = 'plan' | 'satellite';
 
-export function PlacesMap({ places }: { places: PlaceMarker[] }) {
+type PlacesMapProps = { places: PlaceMarker[]; onSelect: (placeId: string) => void };
+
+export function PlacesMap({ places, onSelect }: PlacesMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const [baseLayer, setBaseLayer] = useState<BaseLayer>('plan');
@@ -84,16 +86,15 @@ export function PlacesMap({ places }: { places: PlaceMarker[] }) {
     const map = mapRef.current;
     if (!map) return;
     const markers = places.map((place) => {
-      const popup = new maplibregl.Popup({ offset: 24 }).setText(
-        place.region ? `${place.name} · ${place.region}` : place.name,
-      );
-      return new maplibregl.Marker({ color: '#0F766E' })
-        .setLngLat([place.lng, place.lat])
-        .setPopup(popup)
-        .addTo(map);
+      const marker = new maplibregl.Marker({ color: '#0F766E' }).setLngLat([place.lng, place.lat]).addTo(map);
+      const element = marker.getElement();
+      element.style.cursor = 'pointer';
+      element.title = place.region ? `${place.name} · ${place.region}` : place.name;
+      element.addEventListener('click', () => onSelect(place.id));
+      return marker;
     });
     return () => markers.forEach((marker) => marker.remove());
-  }, [places]);
+  }, [places, onSelect]);
 
   const nextLayer: BaseLayer = baseLayer === 'plan' ? 'satellite' : 'plan';
 
