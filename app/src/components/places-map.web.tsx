@@ -12,20 +12,29 @@ const PLAN_STYLE = 'https://tiles.openfreemap.org/styles/liberty';
 
 // Sentinel-2 cloudless 2016 by EOX is CC BY 4.0, so it is free to use with
 // attribution. Its 10 m resolution blurs beyond zoom 13.
-const SATELLITE_STYLE: maplibregl.StyleSpecification = {
-  version: 8,
-  sources: {
-    satellite: {
-      type: 'raster',
-      tiles: ['https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless_3857/default/g/{z}/{y}/{x}.jpg'],
-      tileSize: 256,
-      maxzoom: 15,
-      attribution:
-        '<a href="https://s2maps.eu" target="_blank">Sentinel-2 cloudless</a> by EOX IT Services GmbH (contains modified Copernicus Sentinel data 2016)',
-    },
-  },
-  layers: [{ id: 'satellite', type: 'raster', source: 'satellite' }],
+const SATELLITE_SOURCE: maplibregl.RasterSourceSpecification = {
+  type: 'raster',
+  tiles: ['https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless_3857/default/g/{z}/{y}/{x}.jpg'],
+  tileSize: 256,
+  maxzoom: 15,
+  attribution:
+    '<a href="https://s2maps.eu" target="_blank">Sentinel-2 cloudless</a> by EOX IT Services GmbH (contains modified Copernicus Sentinel data 2016)',
 };
+
+// Hybrid view: satellite imagery under the plan style's roads, borders and labels.
+async function buildSatelliteStyle(): Promise<maplibregl.StyleSpecification> {
+  const plan: maplibregl.StyleSpecification = await (await fetch(PLAN_STYLE)).json();
+  const overlays = plan.layers.filter(
+    (layer) =>
+      layer.type === 'symbol' ||
+      (layer.type === 'line' && /road|highway|boundary|bridge|tunnel/.test(layer.id)),
+  );
+  return {
+    ...plan,
+    sources: { ...plan.sources, satellite: SATELLITE_SOURCE },
+    layers: [{ id: 'satellite', type: 'raster', source: 'satellite' }, ...overlays],
+  };
+}
 
 type BaseLayer = 'plan' | 'satellite';
 
@@ -49,7 +58,26 @@ export function PlacesMap({ places }: { places: PlaceMarker[] }) {
 
   // Markers are DOM elements, so they survive style changes.
   useEffect(() => {
-    mapRef.current?.setStyle(baseLayer === 'plan' ? PLAN_STYLE : SATELLITE_STYLE);
+    const map = mapRef.current;
+    if (!map) return;
+    if (baseLayer === 'plan') {
+      map.setStyle(PLAN_STYLE);
+      return;
+    }
+    let cancelled = false;
+    // Without the labels the imagery is still useful, so fall back to it alone.
+    buildSatelliteStyle()
+      .catch((): maplibregl.StyleSpecification => ({
+        version: 8,
+        sources: { satellite: SATELLITE_SOURCE },
+        layers: [{ id: 'satellite', type: 'raster', source: 'satellite' }],
+      }))
+      .then((style) => {
+        if (!cancelled) map.setStyle(style);
+      });
+    return () => {
+      cancelled = true;
+    };
   }, [baseLayer]);
 
   useEffect(() => {
