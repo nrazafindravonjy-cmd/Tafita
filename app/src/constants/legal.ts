@@ -1,8 +1,8 @@
-// Publisher details shown in the legal pages. Fill these in before the beta.
+// Publisher details shown in the legal pages.
 export const Publisher = {
-  name: 'À compléter',
-  contactEmail: 'À compléter',
-  country: 'À compléter',
+  name: 'Nirintsoa Patrick Razafindravonjy',
+  contactEmail: 'n.razafindravonjy@gmail.com',
+  country: 'Madagascar',
   updatedOn: '3 novembre 2026',
 } as const;
 
