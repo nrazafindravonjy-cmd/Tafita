@@ -96,7 +96,7 @@
   },
   "place": {
     "close": "Close",
-    "noReviews": "No reviews yet.",
+    "noReviews": "No reviews yet",
     "rating": "★ {{average}} · {{count}} reviews",
     "signInToReview": "Sign in from the Profile tab to review this place.",
     "usernameFirst": "Choose your username in the Profile tab first.",
@@ -139,10 +139,10 @@
     }
   },
   "categories": {
-    "nature": "nature and parks",
-    "culture": "culture and heritage",
-    "food": "food",
-    "hidden-gem": "hidden gem",
-    "beach": "beaches and islands"
+    "nature": "Nature and parks",
+    "culture": "Culture and heritage",
+    "food": "Food",
+    "hidden-gem": "Hidden gem",
+    "beach": "Beaches and islands"
   }
 }

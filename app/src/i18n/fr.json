@@ -96,7 +96,7 @@
   },
   "place": {
     "close": "Fermer",
-    "noReviews": "Pas encore d'avis.",
+    "noReviews": "Pas encore d'avis",
     "rating": "★ {{average}} · {{count}} avis",
     "signInToReview": "Connectez-vous dans l’onglet Profil pour donner votre avis.",
     "usernameFirst": "Choisissez d'abord votre nom d'utilisateur dans l’onglet Profil.",
@@ -139,10 +139,10 @@
     }
   },
   "categories": {
-    "nature": "nature et parcs",
-    "culture": "culture et patrimoine",
-    "food": "gastronomie",
-    "hidden-gem": "pépite",
-    "beach": "plages et îles"
+    "nature": "Nature et parcs",
+    "culture": "Culture et patrimoine",
+    "food": "Gastronomie",
+    "hidden-gem": "Pépite",
+    "beach": "Plages et îles"
   }
 }

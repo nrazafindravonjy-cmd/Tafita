@@ -2,7 +2,7 @@ import { Image } from 'expo-image';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LinearGradient } from 'expo-linear-gradient';
-import { ActivityIndicator, Linking, Pressable, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { ActivityIndicator, Linking, Platform, Pressable, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
 
 import { Button, Field } from '@/components/form';
 import { PhotoPicker } from '@/components/photo-picker';
@@ -81,7 +81,7 @@ export function PlaceDetails({ placeId, onClose }: PlaceDetailsProps) {
             locations={[0, 0.28, 0.55, 1]}
             style={StyleSheet.absoluteFill}
           />
-          <View style={styles.heroTop}>
+          <View style={[styles.heroTop, Platform.OS === 'web' && styles.heroTopWeb]}>
             <Pressable accessibilityRole="button" accessibilityLabel={t('place.close')} onPress={onClose} style={styles.pill}>
               <ThemedText type="smallBold" style={styles.pillText}>
                 ← {t('place.back')}
@@ -229,6 +229,8 @@ const styles = StyleSheet.create({
   scroll: { paddingBottom: Spacing.six },
   hero: { justifyContent: 'space-between' },
   heroTop: { flexDirection: 'row', justifyContent: 'space-between', padding: Spacing.three, paddingTop: Spacing.four },
+  // Clears the floating web tab bar.
+  heroTopWeb: { paddingTop: Spacing.six + Spacing.five },
   heroBottom: { padding: Spacing.four, gap: Spacing.one },
   pill: { backgroundColor: Brand.cream, borderRadius: 999, paddingHorizontal: Spacing.three, paddingVertical: Spacing.one },
   pillText: { color: Brand.ink },

@@ -81,7 +81,9 @@ export function PlacesMap({ places, onSelect, onPickLocation, pickedLocation }: 
       style: PLAN_STYLE,
       center: MADAGASCAR_CENTER,
       zoom: 4.6,
+      attributionControl: false,
     });
+    map.addControl(new maplibregl.AttributionControl({ compact: true }), 'bottom-right');
     map.addControl(new maplibregl.NavigationControl(), 'top-right');
     const popup = new maplibregl.Popup({ closeButton: false, offset: 8 });
     map.on('click', (event) => {
