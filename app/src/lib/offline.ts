@@ -1,5 +1,5 @@
 import { loadCoverPhotos } from '@/lib/place-photos';
-import type { PlaceMarker } from '@/lib/places';
+import { fetchPlaceMarkers, type PlaceMarker } from '@/lib/places';
 import { fetchQuestions } from '@/lib/questions';
 import { fetchPhotos, fetchPlace, fetchReviews, photoUrl } from '@/lib/reviews';
 
@@ -7,7 +7,28 @@ import { fetchPhotos, fetchPlace, fetchReviews, photoUrl } from '@/lib/reviews';
 export function registerOfflineSupport() {
   if (typeof navigator === 'undefined' || !('serviceWorker' in navigator)) return;
   if (location.hostname === 'localhost') return;
+  // On a first visit the page loads before the worker takes over, so nothing
+  // is cached yet: fetch it all again once the worker is in control.
+  if (!navigator.serviceWorker.controller) {
+    navigator.serviceWorker.addEventListener('controllerchange', warmCache, { once: true });
+  }
   navigator.serviceWorker.register('/sw.js').catch(() => {});
+}
+
+const CACHED_HOSTS = ['tiles.openfreemap.org', 'tiles.maps.eox.at', 'commons.wikimedia.org', 'upload.wikimedia.org'];
+
+async function warmCache() {
+  const urls = performance
+    .getEntriesByType('resource')
+    .map((entry) => new URL(entry.name))
+    .filter((url) => url.origin === location.origin || CACHED_HOSTS.includes(url.hostname));
+  await Promise.all(
+    urls.map((url) =>
+      fetch(url.href, url.origin === location.origin ? {} : { mode: 'no-cors' }).catch(() => null),
+    ),
+  );
+  // Data API requests need the session token, so they go through the app's own calls.
+  await Promise.all([fetchPlaceMarkers().catch(() => null), loadCoverPhotos()]);
 }
 
 const STYLE_URL = 'https://tiles.openfreemap.org/styles/liberty';

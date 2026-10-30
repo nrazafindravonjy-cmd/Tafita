@@ -1,6 +1,6 @@
 // Tafita offline support: keeps what was viewed and what a list prepared, and
 // serves it when the network is missing.
-const VERSION = 'tafita-v1';
+const VERSION = 'tafita-v2';
 const SHELL = `${VERSION}-shell`;
 const DATA = `${VERSION}-data`;
 const MEDIA = `${VERSION}-media`;
