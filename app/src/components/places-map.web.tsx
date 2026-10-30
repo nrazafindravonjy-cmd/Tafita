@@ -4,6 +4,7 @@ import maplibregl from 'maplibre-gl';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import i18n from '@/i18n';
 import type { PlaceMarker } from '@/lib/places';
 
 // Centered on Madagascar, zoomed out enough to show the whole island.
@@ -38,6 +39,24 @@ async function buildSatelliteStyle(): Promise<maplibregl.StyleSpecification> {
 
 type BaseLayer = 'plan' | 'satellite';
 
+// Named map features (towns, beaches, shops...) from the OpenMapTiles labels.
+function labelsAt(map: maplibregl.Map, point: maplibregl.PointLike) {
+  // The style is missing until it loads, and while switching base layers.
+  const layers = (map.getStyle()?.layers ?? [])
+    .filter((layer) => layer.type === 'symbol')
+    .map((layer) => layer.id);
+  if (!layers.length) return [];
+  return map
+    .queryRenderedFeatures(point, { layers })
+    .filter((feature) => typeof feature.properties.name === 'string');
+}
+
+function featureLabel(properties: Record<string, unknown>): string {
+  const name = properties[`name:${i18n.language}`] ?? properties.name;
+  const kind = properties.subclass ?? properties.class;
+  return typeof kind === 'string' ? `${name} · ${kind.replaceAll('_', ' ')}` : String(name);
+}
+
 type PlacesMapProps = { places: PlaceMarker[]; onSelect: (placeId: string) => void };
 
 export function PlacesMap({ places, onSelect }: PlacesMapProps) {
@@ -54,6 +73,15 @@ export function PlacesMap({ places, onSelect }: PlacesMapProps) {
       zoom: 4.6,
     });
     map.addControl(new maplibregl.NavigationControl(), 'top-right');
+    const popup = new maplibregl.Popup({ closeButton: false, offset: 8 });
+    map.on('click', (event) => {
+      const [feature] = labelsAt(map, event.point);
+      if (feature) popup.setLngLat(event.lngLat).setText(featureLabel(feature.properties)).addTo(map);
+      else popup.remove();
+    });
+    map.on('mousemove', (event) => {
+      map.getCanvas().style.cursor = labelsAt(map, event.point).length ? 'pointer' : '';
+    });
     mapRef.current = map;
     return () => map.remove();
   }, []);
