@@ -18,7 +18,7 @@ const supported = glassSupported();
 
 export const glassCss: CSSProperties = supported
   ? {
-      background: 'rgba(14, 22, 9, 0.52)',
+      background: 'rgba(14, 22, 9, 0.66)',
       backdropFilter: BLUR,
       WebkitBackdropFilter: BLUR,
       border: '1px solid rgba(255, 246, 230, 0.16)',

@@ -308,6 +308,8 @@ export function PlacesMap({
       {/* Lifts the zoom buttons and credits above the bottom tab bar. */}
       <style>{`
         .tafita-map .maplibregl-ctrl-bottom-right { margin-bottom: ${insets.bottom}px; }
+        /* Phones zoom with two fingers, and the buttons would sit under the place card. */
+        ${insets.bottom > 0 ? '.tafita-map .maplibregl-ctrl-group { display: none; }' : ''}
         .tafita-map .maplibregl-ctrl-group {
           background: ${glassCss.background}; border: ${glassCss.border}; box-shadow: ${glassCss.boxShadow};
           backdrop-filter: ${glassCss.backdropFilter ?? 'none'}; -webkit-backdrop-filter: ${glassCss.backdropFilter ?? 'none'};
