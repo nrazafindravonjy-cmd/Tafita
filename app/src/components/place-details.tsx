@@ -9,6 +9,7 @@ import { PhotoPicker } from '@/components/photo-picker';
 import { ReportButton } from '@/components/report-button';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
+import { NavBarHeight, useNavLayout } from '@/hooks/use-nav-layout';
 import { Brand, Colors, Spacing } from '@/constants/theme';
 import type { Language } from '@/i18n';
 import { compressImage, MIN_SIDE, PhotoTooSmallError } from '@/lib/compress-image';
@@ -32,6 +33,7 @@ type PlaceDetailsProps = { placeId: string; onClose: () => void };
 export function PlaceDetails({ placeId, onClose }: PlaceDetailsProps) {
   const { t, i18n } = useTranslation();
   const { height } = useWindowDimensions();
+  const layout = useNavLayout();
   const [place, setPlace] = useState<Place | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [photos, setPhotos] = useState<PlacePhoto[]>([]);
@@ -55,6 +57,14 @@ export function PlaceDetails({ placeId, onClose }: PlaceDetailsProps) {
 
   useEffect(load, [load]);
 
+  // Escape closes the page with a keyboard, as it would a dialog.
+  useEffect(() => {
+    if (Platform.OS !== 'web') return;
+    const onKey = (event: KeyboardEvent) => event.key === 'Escape' && onClose();
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onClose]);
+
   const description = i18n.language === 'en' ? place?.description_en : place?.description_fr;
   const average = reviews.length ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length : null;
   // Members' photos stand in for the hero when the place has no Commons photo.
@@ -64,7 +74,7 @@ export function PlaceDetails({ placeId, onClose }: PlaceDetailsProps) {
 
   return (
     <ThemedView style={styles.overlay}>
-      <ScrollView contentContainerStyle={styles.scroll}>
+      <ScrollView contentContainerStyle={[styles.scroll, layout === 'bottom' && { paddingBottom: NavBarHeight + Spacing.six }]}>
         <View style={[styles.hero, { height: Math.max(360, height * 0.62) }]}>
           {hero && (
             <Image
@@ -82,7 +92,7 @@ export function PlaceDetails({ placeId, onClose }: PlaceDetailsProps) {
             locations={[0, 0.28, 0.55, 1]}
             style={StyleSheet.absoluteFill}
           />
-          <View style={[styles.heroTop, Platform.OS === 'web' && styles.heroTopWeb]}>
+          <View style={[styles.heroTop, layout === 'top' && styles.heroTopWeb]}>
             <Pressable accessibilityRole="button" accessibilityLabel={t('place.close')} onPress={onClose} style={styles.pill}>
               <ThemedText type="smallBold" style={styles.pillText}>
                 ← {t('place.back')}

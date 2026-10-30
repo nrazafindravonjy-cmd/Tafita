@@ -182,5 +182,8 @@
     "cancel": "Cancel",
     "confirm": "Delete",
     "partial": "Your profile and content were deleted, but your sign-in account could not be removed automatically. Write to the address given in the privacy policy to finish the deletion."
+  },
+  "preview": {
+    "open": "Open the page of {{name}}"
   }
 }

@@ -1,5 +1,6 @@
 import 'maplibre-gl/dist/maplibre-gl.css';
 
+import type { FeatureCollection, Point } from 'geojson';
 import maplibregl from 'maplibre-gl';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -40,6 +41,79 @@ async function buildSatelliteStyle(): Promise<maplibregl.StyleSpecification> {
 
 type BaseLayer = 'plan' | 'satellite';
 
+const SOURCE = 'tafita-places';
+const CLUSTERS_LAYER = 'tafita-clusters';
+const COUNT_LAYER = 'tafita-cluster-count';
+const POINTS_LAYER = 'tafita-points';
+const SELECTED_LAYER = 'tafita-selected';
+
+// Places as a clustered GeoJSON source, so nearby places merge into a numbered
+// bubble when zoomed out instead of stacking markers on top of each other.
+function addPlaceLayers(map: maplibregl.Map, { places, selectedId }: { places: PlaceMarker[]; selectedId: string | null }) {
+  const data: FeatureCollection = {
+    type: 'FeatureCollection',
+    features: places.map((place) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: [place.lng, place.lat] },
+      properties: { id: place.id, name: place.name },
+    })),
+  };
+  const source = map.getSource(SOURCE) as maplibregl.GeoJSONSource | undefined;
+  if (source) source.setData(data);
+  else map.addSource(SOURCE, { type: 'geojson', data, cluster: true, clusterRadius: 44, clusterMaxZoom: 11 });
+
+  if (!map.getLayer(CLUSTERS_LAYER)) {
+    map.addLayer({
+      id: CLUSTERS_LAYER,
+      type: 'circle',
+      source: SOURCE,
+      filter: ['has', 'point_count'],
+      paint: {
+        'circle-color': '#60D42D',
+        'circle-radius': ['step', ['get', 'point_count'], 16, 5, 20, 15, 26],
+        'circle-stroke-width': 3,
+        'circle-stroke-color': '#FFE7BE',
+      },
+    });
+    // Counts need the style's fonts; the bare satellite fallback has none.
+    if (map.getStyle().glyphs) {
+      map.addLayer({
+        id: COUNT_LAYER,
+        type: 'symbol',
+        source: SOURCE,
+        filter: ['has', 'point_count'],
+        layout: { 'text-field': '{point_count_abbreviated}', 'text-font': ['Noto Sans Bold'], 'text-size': 14 },
+        paint: { 'text-color': '#1E3A12' },
+      });
+    }
+    map.addLayer({
+      id: POINTS_LAYER,
+      type: 'circle',
+      source: SOURCE,
+      filter: ['!', ['has', 'point_count']],
+      paint: {
+        'circle-color': '#60D42D',
+        'circle-radius': 9,
+        'circle-stroke-width': 3,
+        'circle-stroke-color': '#FFE7BE',
+      },
+    });
+    map.addLayer({
+      id: SELECTED_LAYER,
+      type: 'circle',
+      source: SOURCE,
+      filter: ['==', ['get', 'id'], ''],
+      paint: {
+        'circle-color': '#FFE7BE',
+        'circle-radius': 13,
+        'circle-stroke-width': 4,
+        'circle-stroke-color': '#60D42D',
+      },
+    });
+  }
+  map.setFilter(SELECTED_LAYER, ['all', ['!', ['has', 'point_count']], ['==', ['get', 'id'], selectedId ?? '']]);
+}
+
 // Named map features (towns, beaches, shops...) from the OpenMapTiles labels.
 function labelsAt(map: maplibregl.Map, point: maplibregl.PointLike) {
   // The style is missing until it loads, and while switching base layers.
@@ -64,9 +138,19 @@ type PlacesMapProps = {
   // While set, clicking the map picks a location instead of showing labels.
   onPickLocation?: (location: { lat: number; lng: number }) => void;
   pickedLocation?: { lat: number; lng: number } | null;
+  selectedId?: string | null;
+  // Space taken by the floating tab bar, so controls stay clear of it.
+  insets?: { top: number; bottom: number };
 };
 
-export function PlacesMap({ places, onSelect, onPickLocation, pickedLocation }: PlacesMapProps) {
+export function PlacesMap({
+  places,
+  onSelect,
+  onPickLocation,
+  pickedLocation,
+  selectedId,
+  insets = { top: 0, bottom: 0 },
+}: PlacesMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const [baseLayer, setBaseLayer] = useState<BaseLayer>('plan');
@@ -74,6 +158,11 @@ export function PlacesMap({ places, onSelect, onPickLocation, pickedLocation }: 
   // The click handler is bound once, so it reads the latest callback here.
   const pickRef = useRef(onPickLocation);
   pickRef.current = onPickLocation;
+  const selectRef = useRef(onSelect);
+  selectRef.current = onSelect;
+  // Read by addPlaceLayers, which runs again after every style change.
+  const dataRef = useRef<{ places: PlaceMarker[]; selectedId: string | null }>({ places, selectedId: null });
+  dataRef.current = { places, selectedId: selectedId ?? null };
 
   useEffect(() => {
     const map = new maplibregl.Map({
@@ -84,12 +173,30 @@ export function PlacesMap({ places, onSelect, onPickLocation, pickedLocation }: 
       attributionControl: false,
     });
     map.addControl(new maplibregl.AttributionControl({ compact: true }), 'bottom-right');
-    map.addControl(new maplibregl.NavigationControl(), 'top-right');
+    map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'bottom-right');
     const popup = new maplibregl.Popup({ closeButton: false, offset: 8 });
+    // A style change drops our source and layers, so they are added back each time.
+    map.on('styledata', () => addPlaceLayers(map, dataRef.current));
     map.on('click', (event) => {
       if (pickRef.current) {
         popup.remove();
         pickRef.current({ lat: event.lngLat.lat, lng: event.lngLat.lng });
+        return;
+      }
+      const [hit] = map.getLayer(POINTS_LAYER)
+        ? map.queryRenderedFeatures(event.point, { layers: [CLUSTERS_LAYER, POINTS_LAYER] })
+        : [];
+      if (hit?.layer.id === CLUSTERS_LAYER) {
+        popup.remove();
+        const source = map.getSource(SOURCE) as maplibregl.GeoJSONSource;
+        source.getClusterExpansionZoom(hit.properties.cluster_id).then((zoom) =>
+          map.easeTo({ center: (hit.geometry as Point).coordinates as [number, number], zoom }),
+        );
+        return;
+      }
+      if (hit) {
+        popup.remove();
+        selectRef.current(String(hit.properties.id));
         return;
       }
       const [feature] = labelsAt(map, event.point);
@@ -101,7 +208,10 @@ export function PlacesMap({ places, onSelect, onPickLocation, pickedLocation }: 
         map.getCanvas().style.cursor = 'crosshair';
         return;
       }
-      map.getCanvas().style.cursor = labelsAt(map, event.point).length ? 'pointer' : '';
+      const onPlace =
+        map.getLayer(POINTS_LAYER) &&
+        map.queryRenderedFeatures(event.point, { layers: [CLUSTERS_LAYER, POINTS_LAYER] }).length > 0;
+      map.getCanvas().style.cursor = onPlace || labelsAt(map, event.point).length ? 'pointer' : '';
     });
     mapRef.current = map;
     return () => map.remove();
@@ -133,17 +243,8 @@ export function PlacesMap({ places, onSelect, onPickLocation, pickedLocation }: 
 
   useEffect(() => {
     const map = mapRef.current;
-    if (!map) return;
-    const markers = places.map((place) => {
-      const marker = new maplibregl.Marker({ color: '#60D42D' }).setLngLat([place.lng, place.lat]).addTo(map);
-      const element = marker.getElement();
-      element.style.cursor = 'pointer';
-      element.title = place.region ? `${place.name} · ${place.region}` : place.name;
-      element.addEventListener('click', () => onSelect(place.id));
-      return marker;
-    });
-    return () => markers.forEach((marker) => marker.remove());
-  }, [places, onSelect]);
+    if (map?.isStyleLoaded()) addPlaceLayers(map, dataRef.current);
+  }, [places, selectedId]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -176,24 +277,28 @@ export function PlacesMap({ places, onSelect, onPickLocation, pickedLocation }: 
   const nextLayer: BaseLayer = baseLayer === 'plan' ? 'satellite' : 'plan';
 
   return (
-    <div style={styles.wrapper}>
+    <div style={styles.wrapper} className="tafita-map">
+      {/* Lifts the zoom buttons and credits above the bottom tab bar. */}
+      <style>{`.tafita-map .maplibregl-ctrl-bottom-right { margin-bottom: ${insets.bottom}px; }`}</style>
       <div ref={containerRef} style={styles.map} />
-      <button type="button" style={styles.toggle} onClick={() => setBaseLayer(nextLayer)}>
+      <button
+        type="button"
+        style={{ ...styles.toggle, bottom: insets.bottom + 16 }}
+        onClick={() => setBaseLayer(nextLayer)}>
         {t(`map.layers.${nextLayer}`)}
       </button>
-      <MapSearch places={places} onPick={goTo} />
+      <MapSearch places={places} onPick={goTo} top={insets.top + 12} />
     </div>
   );
 }
 
 const styles = {
   wrapper: { position: 'relative', flex: 1, display: 'flex', minHeight: 320 },
-  map: { flex: 1, borderRadius: 16, overflow: 'hidden' },
+  map: { flex: 1 },
   toggle: {
     position: 'absolute',
-    top: 10,
-    left: 10,
-    padding: '6px 12px',
+    left: 12,
+    padding: '10px 14px',
     border: 'none',
     borderRadius: 8,
     background: '#FFE7BE',

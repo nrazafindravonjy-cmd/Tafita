@@ -1,9 +1,10 @@
 import { useTranslation } from 'react-i18next';
-import { Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { legalDocument, Publisher, type LegalDocumentId } from '@/constants/legal';
+import { NavBarHeight, useNavLayout } from '@/hooks/use-nav-layout';
 import { Brand, Spacing } from '@/constants/theme';
 
 type LegalDocumentViewProps = { id: LegalDocumentId; onClose: () => void };
@@ -11,10 +12,16 @@ type LegalDocumentViewProps = { id: LegalDocumentId; onClose: () => void };
 export function LegalDocumentView({ id, onClose }: LegalDocumentViewProps) {
   const { t, i18n } = useTranslation();
   const document = legalDocument(id, i18n.language);
+  const layout = useNavLayout();
 
   return (
     <ThemedView style={styles.overlay}>
-      <ScrollView contentContainerStyle={[styles.content, Platform.OS === 'web' && styles.webOffset]}>
+      <ScrollView
+        contentContainerStyle={[
+          styles.content,
+          layout === 'top' && styles.webOffset,
+          layout === 'bottom' && { paddingBottom: NavBarHeight + Spacing.four },
+        ]}>
         <Pressable accessibilityRole="button" onPress={onClose} style={styles.back}>
           <ThemedText type="smallBold" style={styles.backText}>
             ← {t('legal.back')}

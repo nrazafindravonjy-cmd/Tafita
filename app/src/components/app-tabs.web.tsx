@@ -6,10 +6,12 @@ import {
   TabTriggerSlotProps,
   TabListProps,
 } from 'expo-router/ui';
+import { Compass, Map, UserRound, type LucideIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Pressable, View, StyleSheet } from 'react-native';
 
-import { Brand, MaxContentWidth, Spacing } from '@/constants/theme';
+import { Brand, Colors, MaxContentWidth, Spacing } from '@/constants/theme';
+import { useNavLayout } from '@/hooks/use-nav-layout';
 
 import { ThemedText } from './themed-text';
 import { ThemedView } from './themed-view';
@@ -22,13 +24,13 @@ export default function AppTabs() {
       <TabList asChild>
         <CustomTabList>
           <TabTrigger name="index" href="/" asChild>
-            <TabButton>{t('tabs.map')}</TabButton>
+            <TabButton icon={Map} label={t('tabs.map')} />
           </TabTrigger>
           <TabTrigger name="discover" href="/discover" asChild>
-            <TabButton>{t('tabs.discover')}</TabButton>
+            <TabButton icon={Compass} label={t('tabs.discover')} />
           </TabTrigger>
           <TabTrigger name="profile" href="/profile" asChild>
-            <TabButton>{t('tabs.profile')}</TabButton>
+            <TabButton icon={UserRound} label={t('tabs.profile')} />
           </TabTrigger>
         </CustomTabList>
       </TabList>
@@ -36,15 +38,18 @@ export default function AppTabs() {
   );
 }
 
+type TabButtonProps = TabTriggerSlotProps & { icon: LucideIcon; label: string };
+
 // The trigger ref targets a component type Pressable cannot accept, so it is dropped.
-export function TabButton({ children, isFocused, ref: _ref, ...props }: TabTriggerSlotProps) {
+export function TabButton({ icon: Icon, label, isFocused, ref: _ref, ...props }: TabButtonProps) {
   return (
-    <Pressable {...props} style={({ pressed }) => pressed && styles.pressed}>
-      <View style={[styles.tabButtonView, isFocused && styles.tabButtonActive]}>
-        <ThemedText type="smallBold" themeColor="textSecondary" style={isFocused ? styles.tabTextActive : undefined}>
-          {children}
-        </ThemedText>
-      </View>
+    <Pressable
+      {...props}
+      accessibilityLabel={label}
+      // Shown as a tooltip on hover with a mouse.
+      {...({ title: label } as object)}
+      style={({ pressed }) => [styles.tabButtonView, isFocused && styles.tabButtonActive, pressed && styles.pressed]}>
+      <Icon size={22} strokeWidth={2.2} color={isFocused ? Brand.ink : Colors.dark.textSecondary} aria-hidden />
     </Pressable>
   );
 }
@@ -59,10 +64,11 @@ function TafitaLogo() {
 }
 
 export function CustomTabList(props: TabListProps) {
+  const layout = useNavLayout();
   return (
-    <View {...props} style={styles.tabListContainer}>
-      <ThemedView type="backgroundElement" style={styles.innerContainer}>
-        <View style={styles.brand}>
+    <View {...props} style={[styles.tabListContainer, layout === 'bottom' && styles.tabListBottom]}>
+      <ThemedView type="backgroundElement" style={[styles.innerContainer, layout === 'bottom' && styles.innerBottom]}>
+        <View style={[styles.brand, layout === 'bottom' && styles.brandHidden]}>
           <TafitaLogo />
           <ThemedText type="smallBold" style={styles.brandText}>
             Tafita
@@ -78,6 +84,8 @@ export function CustomTabList(props: TabListProps) {
 const styles = StyleSheet.create({
   tabListContainer: {
     position: 'absolute',
+    top: 0,
+    zIndex: 30,
     width: '100%',
     padding: Spacing.three,
     justifyContent: 'center',
@@ -107,13 +115,22 @@ const styles = StyleSheet.create({
     backgroundColor: Brand.cream,
   },
   tabButtonActive: { backgroundColor: Brand.green },
-  tabTextActive: { color: Brand.ink },
+  tabListBottom: {
+    top: 'auto' as unknown as number,
+    bottom: 0,
+    paddingBottom: 'max(12px, env(safe-area-inset-bottom))' as unknown as number,
+  },
+  // On phones the bar is only the three tabs, spread across the width.
+  brandHidden: { display: 'none' },
+  innerBottom: { justifyContent: 'space-around', paddingHorizontal: Spacing.three },
   pressed: {
     opacity: 0.7,
   },
+  // At least 44 px tall, the recommended touch target.
   tabButtonView: {
-    paddingVertical: Spacing.one,
-    paddingHorizontal: Spacing.three,
-    borderRadius: Spacing.three,
+    paddingVertical: Spacing.two + Spacing.half,
+    paddingHorizontal: Spacing.four,
+    borderRadius: 999,
+    alignItems: 'center',
   },
 });

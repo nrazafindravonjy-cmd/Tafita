@@ -12,6 +12,8 @@ type PlacesMapProps = {
   onSelect: (placeId: string) => void;
   onPickLocation?: (location: { lat: number; lng: number }) => void;
   pickedLocation?: { lat: number; lng: number } | null;
+  selectedId?: string | null;
+  insets?: { top: number; bottom: number };
 };
 
 export function PlacesMap({ places, onSelect }: PlacesMapProps) {

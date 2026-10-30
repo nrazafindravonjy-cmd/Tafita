@@ -1,3 +1,4 @@
+import { Search } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -7,9 +8,9 @@ import { loadSearchIndex, normalize, searchIndex } from '@/lib/search-index';
 
 export type SearchPick = { kind: 'tafita'; place: PlaceMarker } | { kind: 'osm'; result: GeocodeResult };
 
-type MapSearchProps = { places: PlaceMarker[]; onPick: (pick: SearchPick) => void };
+type MapSearchProps = { places: PlaceMarker[]; onPick: (pick: SearchPick) => void; top: number };
 
-export function MapSearch({ places, onPick }: MapSearchProps) {
+export function MapSearch({ places, onPick, top }: MapSearchProps) {
   const { t, i18n } = useTranslation();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
@@ -48,14 +49,15 @@ export function MapSearch({ places, onPick }: MapSearchProps) {
 
   if (!open) {
     return (
-      <button type="button" aria-label={t('map.search.open')} style={styles.iconButton} onClick={() => setOpen(true)}>
-        🔍
+      <button type="button" style={{ ...styles.bar, top }} onClick={() => setOpen(true)}>
+        <Search size={18} strokeWidth={2.4} aria-hidden />
+        <span>{t('map.search.placeholder')}</span>
       </button>
     );
   }
 
   return (
-    <div style={styles.panel}>
+    <div style={{ ...styles.panel, top }}>
       <form
         style={styles.row}
         onSubmit={(event) => {
@@ -111,25 +113,32 @@ export function MapSearch({ places, onPick }: MapSearchProps) {
 }
 
 const styles = {
-  iconButton: {
+  // Always visible, so searching needs one tap instead of finding an icon first.
+  bar: {
     position: 'absolute',
-    top: 48,
-    left: 10,
-    width: 36,
-    height: 36,
+    left: 12,
+    right: 12,
+    maxWidth: 460,
+    display: 'flex',
+    alignItems: 'center',
+    gap: 10,
+    padding: '12px 16px',
     border: 'none',
-    borderRadius: 8,
-    background: '#FFE7BE',
-    boxShadow: '0 0 0 2px rgba(0, 0, 0, 0.1)',
-    cursor: 'pointer',
+    borderRadius: 999,
+    background: '#FFF6E6',
+    color: '#5E6B55',
     fontSize: 16,
+    fontFamily: 'BricolageGrotesque_500Medium, sans-serif',
+    textAlign: 'left',
+    boxShadow: '0 4px 18px rgba(0, 0, 0, 0.25)',
+    cursor: 'text',
   },
   panel: {
     position: 'absolute',
-    top: 48,
-    left: 10,
-    right: 56,
-    maxWidth: 420,
+    left: 12,
+    right: 12,
+    maxWidth: 460,
+    zIndex: 5,
     display: 'flex',
     flexDirection: 'column',
     gap: 4,

@@ -182,5 +182,8 @@
     "cancel": "Annuler",
     "confirm": "Supprimer",
     "partial": "Votre profil et vos contenus ont été supprimés, mais votre identifiant de connexion n'a pas pu l'être automatiquement. Écrivez-nous à l'adresse indiquée dans la politique de confidentialité pour finaliser la suppression."
+  },
+  "preview": {
+    "open": "Ouvrir la fiche de {{name}}"
   }
 }
