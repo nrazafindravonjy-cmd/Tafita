@@ -1,0 +1,55 @@
+name: Map search index
+
+# Rebuilds app/public/search-index.json from OpenStreetMap data for Madagascar.
+on:
+  push:
+    paths:
+      - scripts/build_search_index.py
+      - .github/workflows/search-index.yml
+  workflow_dispatch:
+  # Monthly refresh; schedules only run once this file is on the default branch.
+  schedule:
+    - cron: '17 3 1 * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: search-index-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install osmium
+        run: sudo apt-get update && sudo apt-get install -y osmium-tool
+
+      - name: Download Madagascar extract
+        run: curl -fsSL -o madagascar.osm.pbf https://download.geofabrik.de/africa/madagascar-latest.osm.pbf
+
+      - name: Extract named places
+        run: |
+          osmium tags-filter madagascar.osm.pbf \
+            nwr/place nwr/boundary=national_park,protected_area nwr/leisure=nature_reserve,park \
+            nwr/natural=beach,peak,volcano,bay,cape,cave_entrance nwr/waterway=waterfall \
+            nwr/tourism nwr/historic nwr/aeroway=aerodrome nwr/amenity=marketplace,restaurant,cafe,bar \
+            -o places.osm.pbf
+          osmium export places.osm.pbf -f geojsonseq -o places.geojsonseq
+
+      - name: Build index
+        run: |
+          mkdir -p app/public
+          python3 scripts/build_search_index.py places.geojsonseq app/public/search-index.json
+          ls -lh app/public/search-index.json
+          gzip -c app/public/search-index.json | wc -c | awk '{ printf "gzipped: %.0f KB\n", $1 / 1024 }'
+
+      - name: Commit index
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app/public/search-index.json
+          git diff --cached --quiet || git commit -m "Update map search index from OpenStreetMap"
+          git push

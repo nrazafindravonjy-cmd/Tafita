@@ -1,16 +1,13 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { searchMadagascar, type GeocodeResult } from '@/lib/geocode';
 import type { PlaceMarker } from '@/lib/places';
+import { loadSearchIndex, normalize, searchIndex } from '@/lib/search-index';
 
 export type SearchPick = { kind: 'tafita'; place: PlaceMarker } | { kind: 'osm'; result: GeocodeResult };
 
 type MapSearchProps = { places: PlaceMarker[]; onPick: (pick: SearchPick) => void };
-
-function normalize(text: string) {
-  return text.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
-}
 
 export function MapSearch({ places, onPick }: MapSearchProps) {
   const { t, i18n } = useTranslation();
@@ -18,20 +15,27 @@ export function MapSearch({ places, onPick }: MapSearchProps) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<GeocodeResult[]>([]);
   const [status, setStatus] = useState<'idle' | 'searching' | 'empty' | 'error'>('idle');
+  const [index, setIndex] = useState<Awaited<ReturnType<typeof loadSearchIndex>>>([]);
+
+  useEffect(() => {
+    if (open) loadSearchIndex().then(setIndex);
+  }, [open]);
 
   // Tafita places are already loaded, so they filter live while typing.
   const needle = normalize(query.trim());
   const tafitaMatches = needle
     ? places.filter((place) => normalize(`${place.name} ${place.region ?? ''}`).includes(needle)).slice(0, 5)
     : [];
+  const indexMatches = searchIndex(index, query);
 
+  // Enter searches full addresses, which the offline index does not contain.
   async function search() {
     if (query.trim().length < 2) return;
     setStatus('searching');
     try {
       const found = await searchMadagascar(query.trim(), i18n.language);
       setResults(found);
-      setStatus(found.length || tafitaMatches.length ? 'idle' : 'empty');
+      setStatus(found.length || tafitaMatches.length || indexMatches.length ? 'idle' : 'empty');
     } catch {
       setStatus('error');
     }
@@ -82,6 +86,16 @@ export function MapSearch({ places, onPick }: MapSearchProps) {
           <strong>{place.name}</strong> · Tafita
         </button>
       ))}
+      {results.length === 0 &&
+        indexMatches.map((place) => (
+          <button
+            key={`${place.lat},${place.lng},${place.name}`}
+            type="button"
+            style={styles.result}
+            onClick={() => pick({ kind: 'osm', result: place })}>
+            <strong>{place.name}</strong> · {t(`map.kinds.${place.kind}`, { defaultValue: place.kind.replaceAll('_', ' ') })}
+          </button>
+        ))}
       {results.map((result) => (
         <button
           key={`${result.lat},${result.lng},${result.name}`}
