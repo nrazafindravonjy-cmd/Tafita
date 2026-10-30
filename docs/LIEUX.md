@@ -2,7 +2,7 @@
 
 Cette liste complète les 11 lieux de la première migration. Les coordonnées viennent d'OpenStreetMap ; les lieux marqués **à vérifier** ont une position approximative (lacs et sites absents de l'index), à confirmer avant la bêta.
 
-Pour corriger un lieu, modifiez le fichier `db/migrations/20261101000000_more_places.sql` ou directement la table `places` dans Neon.
+Les lieux sont insérés par les fichiers `db/seed/01.sql` à `db/seed/10.sql`. Pour corriger un lieu, modifiez ces fichiers ou directement la table `places` dans Neon.
 
 ## Nature et parcs (33)
 
