@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { MapSearch, type SearchPick } from '@/components/map-search.web';
+import { glassCss } from '@/constants/glass';
 import i18n from '@/i18n';
 import type { Cyclone } from '@/lib/cyclones';
 import type { PlaceMarker } from '@/lib/places';
@@ -305,7 +306,16 @@ export function PlacesMap({
   return (
     <div style={styles.wrapper} className="tafita-map">
       {/* Lifts the zoom buttons and credits above the bottom tab bar. */}
-      <style>{`.tafita-map .maplibregl-ctrl-bottom-right { margin-bottom: ${insets.bottom}px; }`}</style>
+      <style>{`
+        .tafita-map .maplibregl-ctrl-bottom-right { margin-bottom: ${insets.bottom}px; }
+        .tafita-map .maplibregl-ctrl-group {
+          background: ${glassCss.background}; border: ${glassCss.border}; box-shadow: ${glassCss.boxShadow};
+          backdrop-filter: ${glassCss.backdropFilter ?? 'none'}; -webkit-backdrop-filter: ${glassCss.backdropFilter ?? 'none'};
+          border-radius: 18px; overflow: hidden;
+        }
+        .tafita-map .maplibregl-ctrl-group button + button { border-top-color: rgba(255, 246, 230, 0.16); }
+        .tafita-map .maplibregl-ctrl-group .maplibregl-ctrl-icon { filter: invert(1) brightness(1.1); }
+      `}</style>
       <div ref={containerRef} style={styles.map} />
       <button
         type="button"
@@ -325,12 +335,9 @@ const styles = {
     position: 'absolute',
     left: 12,
     padding: '10px 14px',
-    border: 'none',
-    borderRadius: 8,
-    background: '#FFE7BE',
-    color: '#1E3A12',
+    borderRadius: 999,
+    ...glassCss,
     fontFamily: 'BricolageGrotesque_700Bold, sans-serif',
-    boxShadow: '0 0 0 2px rgba(0, 0, 0, 0.1)',
     cursor: 'pointer',
   },
 } satisfies Record<string, React.CSSProperties>;

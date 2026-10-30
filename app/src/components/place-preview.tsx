@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
+import { glassView } from '@/constants/glass';
 import { Brand, Colors, Spacing } from '@/constants/theme';
 import { loadCoverPhotos, previewUrl, type CoverPhoto } from '@/lib/place-photos';
 import type { PlaceMarker } from '@/lib/places';
@@ -70,9 +71,8 @@ const styles = StyleSheet.create({
     gap: Spacing.three,
     padding: Spacing.two,
     paddingRight: Spacing.three,
-    borderRadius: 22,
-    backgroundColor: Colors.dark.backgroundElement,
-    boxShadow: '0 8px 28px rgba(0, 0, 0, 0.35)',
+    borderRadius: 26,
+    ...glassView,
   },
   photo: { width: 84, height: 84, borderRadius: 16 },
   noPhoto: { backgroundColor: Colors.dark.backgroundSelected },

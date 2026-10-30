@@ -9,6 +9,7 @@ import { ListView } from '@/components/list-view';
 import { PlaceDetails } from '@/components/place-details';
 import { Screen } from '@/components/screen';
 import { ThemedText } from '@/components/themed-text';
+import { glassView } from '@/constants/glass';
 import { Brand, Colors, MaxContentWidth, Spacing } from '@/constants/theme';
 import { loadCoverPhotos, previewUrl, type CoverPhoto } from '@/lib/place-photos';
 import { fetchList, type PlaceList } from '@/lib/lists';
@@ -147,12 +148,12 @@ const styles = StyleSheet.create({
   pill: {
     alignSelf: 'flex-start',
     margin: Spacing.three,
-    backgroundColor: Brand.cream,
+    ...glassView,
     borderRadius: 999,
     paddingHorizontal: Spacing.two + Spacing.half,
     paddingVertical: Spacing.half,
   },
-  pillText: { color: Brand.ink, fontSize: 12, lineHeight: 16 },
+  pillText: { color: Brand.cream, fontSize: 12, lineHeight: 16 },
   caption: { padding: Spacing.three, gap: Spacing.half },
   // Narrow columns would otherwise break long names mid-word.
   compactTitle: { fontSize: 24, lineHeight: 27 },

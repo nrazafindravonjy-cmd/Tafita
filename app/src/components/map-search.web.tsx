@@ -2,6 +2,7 @@ import { Search } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { glassCss } from '@/constants/glass';
 import { searchMadagascar, type GeocodeResult } from '@/lib/geocode';
 import type { PlaceMarker } from '@/lib/places';
 import { loadSearchIndex, normalize, searchIndex } from '@/lib/search-index';
@@ -125,12 +126,11 @@ const styles = {
     padding: '12px 16px',
     border: 'none',
     borderRadius: 999,
-    background: '#FFF6E6',
-    color: '#5E6B55',
+    ...glassCss,
+    color: '#D7DECB',
     fontSize: 16,
     fontFamily: 'BricolageGrotesque_500Medium, sans-serif',
     textAlign: 'left',
-    boxShadow: '0 4px 18px rgba(0, 0, 0, 0.25)',
     cursor: 'text',
   },
   panel: {
@@ -143,41 +143,41 @@ const styles = {
     flexDirection: 'column',
     gap: 4,
     padding: 8,
-    borderRadius: 12,
-    background: '#FFF6E6',
-    color: '#1E3A12',
-    boxShadow: '0 2px 12px rgba(0, 0, 0, 0.2)',
+    borderRadius: 22,
+    ...glassCss,
   },
   row: { display: 'flex', gap: 6 },
   input: {
     flex: 1,
     minWidth: 0,
     padding: '6px 10px',
-    border: '1px solid #d4d4d8',
-    borderRadius: 8,
+    border: '1px solid rgba(255, 246, 230, 0.2)',
+    borderRadius: 999,
+    background: 'rgba(255, 246, 230, 0.1)',
+    color: '#FFF6E6',
     fontSize: 16,
     fontFamily: 'BricolageGrotesque_400Regular, sans-serif',
   },
   submit: {
-    padding: '6px 12px',
+    padding: '6px 14px',
     border: 'none',
-    borderRadius: 8,
+    borderRadius: 999,
     background: '#60D42D',
     color: '#1E3A12',
     fontFamily: 'BricolageGrotesque_700Bold, sans-serif',
     cursor: 'pointer',
   },
-  close: { border: 'none', background: 'transparent', cursor: 'pointer', fontSize: 16 },
+  close: { border: 'none', background: 'transparent', color: '#FFF6E6', cursor: 'pointer', fontSize: 16 },
   result: {
     textAlign: 'left',
     padding: '6px 8px',
     border: 'none',
-    borderRadius: 6,
-    background: '#f4f4f5',
-    color: '#000000',
+    borderRadius: 12,
+    background: 'rgba(255, 246, 230, 0.08)',
+    color: '#FFF6E6',
     cursor: 'pointer',
     fontSize: 14,
     fontFamily: 'BricolageGrotesque_400Regular, sans-serif',
   },
-  status: { padding: '4px 8px', fontSize: 14, color: '#52525b' },
+  status: { padding: '4px 8px', fontSize: 14, color: '#D7DECB' },
 } satisfies Record<string, React.CSSProperties>;

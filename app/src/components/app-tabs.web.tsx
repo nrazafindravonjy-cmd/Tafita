@@ -10,11 +10,11 @@ import { Compass, Map, UserRound, type LucideIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Pressable, View, StyleSheet } from 'react-native';
 
+import { glassView } from '@/constants/glass';
 import { Brand, Colors, MaxContentWidth, Spacing } from '@/constants/theme';
 import { useNavLayout } from '@/hooks/use-nav-layout';
 
 import { ThemedText } from './themed-text';
-import { ThemedView } from './themed-view';
 
 export default function AppTabs() {
   const { t } = useTranslation();
@@ -67,7 +67,7 @@ export function CustomTabList(props: TabListProps) {
   const layout = useNavLayout();
   return (
     <View {...props} style={[styles.tabListContainer, layout === 'bottom' && styles.tabListBottom]}>
-      <ThemedView type="backgroundElement" style={[styles.innerContainer, layout === 'bottom' && styles.innerBottom]}>
+      <View style={[styles.innerContainer, glassView, layout === 'bottom' && styles.innerBottom]}>
         <View style={[styles.brand, layout === 'bottom' && styles.brandHidden]}>
           <TafitaLogo />
           <ThemedText type="smallBold" style={styles.brandText}>
@@ -76,7 +76,7 @@ export function CustomTabList(props: TabListProps) {
         </View>
 
         {props.children}
-      </ThemedView>
+      </View>
     </View>
   );
 }

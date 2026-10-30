@@ -12,6 +12,7 @@ import { ReportButton } from '@/components/report-button';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { NavBarHeight, useNavLayout } from '@/hooks/use-nav-layout';
+import { glassView } from '@/constants/glass';
 import { Brand, Colors, Spacing } from '@/constants/theme';
 import type { Language } from '@/i18n';
 import { compressImage, MIN_SIDE, PhotoTooSmallError } from '@/lib/compress-image';
@@ -250,8 +251,8 @@ const styles = StyleSheet.create({
   // Clears the floating web tab bar.
   heroTopWeb: { paddingTop: Spacing.six + Spacing.five },
   heroBottom: { padding: Spacing.four, gap: Spacing.one },
-  pill: { backgroundColor: Brand.cream, borderRadius: 999, paddingHorizontal: Spacing.three, paddingVertical: Spacing.one },
-  pillText: { color: Brand.ink },
+  pill: { ...glassView, borderRadius: 999, paddingHorizontal: Spacing.three, paddingVertical: Spacing.one + Spacing.half },
+  pillText: { color: Brand.cream },
   body: { paddingHorizontal: Spacing.four, gap: Spacing.three, maxWidth: 720, width: '100%', alignSelf: 'center' },
   description: { fontSize: 17, lineHeight: 26 },
   credit: { fontSize: 11, lineHeight: 14 },
