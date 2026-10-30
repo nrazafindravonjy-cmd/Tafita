@@ -133,12 +133,12 @@ export function PlacesMap({ places, onSelect }: PlacesMapProps) {
       onSelect(pick.place.id);
       return;
     }
-    const { bounds, lat, lng } = pick.result;
+    const { bounds, lat, lng, zoom } = pick.result;
     if (bounds) {
       const [south, north, west, east] = bounds;
       map.fitBounds([[west, south], [east, north]], { padding: 40, maxZoom: 16 });
     } else {
-      map.flyTo({ center: [lng, lat], zoom: 15 });
+      map.flyTo({ center: [lng, lat], zoom: zoom ?? 15 });
     }
   }
 

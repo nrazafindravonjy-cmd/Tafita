@@ -4,6 +4,8 @@ export type GeocodeResult = {
   lng: number;
   // [south, north, west, east], when the place covers an area.
   bounds: [number, number, number, number] | null;
+  // Zoom level to use when there are no bounds.
+  zoom?: number;
 };
 
 type NominatimPlace = { display_name: string; lat: string; lon: string; boundingbox?: string[] };
