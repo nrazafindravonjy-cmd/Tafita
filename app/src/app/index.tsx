@@ -1,15 +1,15 @@
-import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Platform } from 'react-native';
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Platform, StyleSheet, View } from "react-native";
 
-import { Button } from '@/components/form';
-import { PlaceDetails } from '@/components/place-details';
-import { PlacesMap } from '@/components/places-map';
-import { ProposePlace } from '@/components/propose-place';
-import { Screen } from '@/components/screen';
-import { ThemedText } from '@/components/themed-text';
-import { neon } from '@/lib/neon';
-import { fetchPlaceMarkers, type PlaceMarker } from '@/lib/places';
+import { Button } from "@/components/form";
+import { PlaceDetails } from "@/components/place-details";
+import { PlacesMap } from "@/components/places-map";
+import { ProposePlace } from "@/components/propose-place";
+import { Screen } from "@/components/screen";
+import { ThemedText } from "@/components/themed-text";
+import { neon } from "@/lib/neon";
+import { fetchPlaceMarkers, type PlaceMarker } from "@/lib/places";
 
 type Location = { lat: number; lng: number };
 
@@ -37,34 +37,57 @@ export default function MapScreen() {
   }
 
   // Picking a location needs the web map; the native list cannot place points.
-  const canPropose = Boolean(userId) && Platform.OS === 'web';
+  const canPropose = Boolean(userId) && Platform.OS === "web";
 
   return (
-    <Screen title={t('map.title')} subtitle={t(proposing ? 'propose.mapHint' : 'map.subtitle')}>
-      {failed && <ThemedText themeColor="textSecondary">{t('common.loadError')}</ThemedText>}
-      <PlacesMap
-        places={places}
-        onSelect={setSelectedId}
-        onPickLocation={proposing ? setPickedLocation : undefined}
-        pickedLocation={pickedLocation}
-      />
-      {proposing && userId ? (
-        <ProposePlace userId={userId} location={pickedLocation} onClose={stopProposing} />
-      ) : (
-        <>
-          {selectedId && <PlaceDetails key={selectedId} placeId={selectedId} onClose={() => setSelectedId(null)} />}
-          {canPropose && !selectedId && (
-            <Button
-              secondary
-              label={t('propose.open')}
-              onPress={() => {
-                setSelectedId(null);
-                setProposing(true);
-              }}
-            />
-          )}
-        </>
+    <View style={styles.root}>
+      <Screen
+        title={t("map.title")}
+        subtitle={t(proposing ? "propose.mapHint" : "map.subtitle")}
+      >
+        {failed && (
+          <ThemedText themeColor="textSecondary">
+            {t("common.loadError")}
+          </ThemedText>
+        )}
+        <PlacesMap
+          places={places}
+          onSelect={setSelectedId}
+          onPickLocation={proposing ? setPickedLocation : undefined}
+          pickedLocation={pickedLocation}
+        />
+        {proposing && userId ? (
+          <ProposePlace
+            userId={userId}
+            location={pickedLocation}
+            onClose={stopProposing}
+          />
+        ) : (
+          <>
+            {canPropose && !selectedId && (
+              <Button
+                secondary
+                label={t("propose.open")}
+                onPress={() => {
+                  setSelectedId(null);
+                  setProposing(true);
+                }}
+              />
+            )}
+          </>
+        )}
+      </Screen>
+      {selectedId && !proposing && (
+        <PlaceDetails
+          key={selectedId}
+          placeId={selectedId}
+          onClose={() => setSelectedId(null)}
+        />
       )}
-    </Screen>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  root: { flex: 1 },
+});

@@ -13,3 +13,8 @@ export function loadCoverPhotos(): Promise<Record<string, CoverPhoto>> {
     });
   return loading;
 }
+
+// Commons serves any width, so a 32px copy makes an instant blurred preview.
+export function previewUrl(url: string): string {
+  return url.replace(/width=\d+/, 'width=32');
+}

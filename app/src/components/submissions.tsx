@@ -4,7 +4,7 @@ import { Linking, StyleSheet, View } from 'react-native';
 
 import { Button } from '@/components/form';
 import { ThemedText } from '@/components/themed-text';
-import { Spacing } from '@/constants/theme';
+import { Brand, Spacing } from '@/constants/theme';
 import {
   fetchMySubmissions,
   fetchPendingSubmissions,
@@ -99,5 +99,5 @@ const styles = StyleSheet.create({
   card: { gap: Spacing.one, paddingVertical: Spacing.two },
   actions: { flexDirection: 'row', gap: Spacing.two },
   action: { flex: 1 },
-  error: { color: '#DC2626' },
+  error: { color: Brand.danger },
 });

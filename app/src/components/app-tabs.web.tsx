@@ -9,7 +9,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { Pressable, View, StyleSheet } from 'react-native';
 
-import { MaxContentWidth, Spacing } from '@/constants/theme';
+import { Brand, MaxContentWidth, Spacing } from '@/constants/theme';
 
 import { ThemedText } from './themed-text';
 import { ThemedView } from './themed-view';
@@ -40,14 +40,21 @@ export default function AppTabs() {
 export function TabButton({ children, isFocused, ref: _ref, ...props }: TabTriggerSlotProps) {
   return (
     <Pressable {...props} style={({ pressed }) => pressed && styles.pressed}>
-      <ThemedView
-        type={isFocused ? 'backgroundSelected' : 'backgroundElement'}
-        style={styles.tabButtonView}>
-        <ThemedText type="small" themeColor={isFocused ? 'text' : 'textSecondary'}>
+      <View style={[styles.tabButtonView, isFocused && styles.tabButtonActive]}>
+        <ThemedText type="smallBold" themeColor="textSecondary" style={isFocused ? styles.tabTextActive : undefined}>
           {children}
         </ThemedText>
-      </ThemedView>
+      </View>
     </Pressable>
+  );
+}
+
+// The logo: a cream curve over the brand green.
+function TafitaLogo() {
+  return (
+    <View style={styles.logo}>
+      <View style={styles.logoCurve} />
+    </View>
   );
 }
 
@@ -55,9 +62,12 @@ export function CustomTabList(props: TabListProps) {
   return (
     <View {...props} style={styles.tabListContainer}>
       <ThemedView type="backgroundElement" style={styles.innerContainer}>
-        <ThemedText type="smallBold" style={styles.brandText}>
-          Tafita
-        </ThemedText>
+        <View style={styles.brand}>
+          <TafitaLogo />
+          <ThemedText type="smallBold" style={styles.brandText}>
+            Tafita
+          </ThemedText>
+        </View>
 
         {props.children}
       </ThemedView>
@@ -84,9 +94,20 @@ const styles = StyleSheet.create({
     gap: Spacing.two,
     maxWidth: MaxContentWidth,
   },
-  brandText: {
-    marginRight: 'auto',
+  brand: { flexDirection: 'row', alignItems: 'center', gap: Spacing.two, marginRight: 'auto' },
+  brandText: { fontSize: 17 },
+  logo: { width: 26, height: 26, borderRadius: 7, backgroundColor: Brand.green, overflow: 'hidden' },
+  logoCurve: {
+    position: 'absolute',
+    left: -6,
+    top: -4,
+    width: 22,
+    height: 34,
+    borderRadius: 17,
+    backgroundColor: Brand.cream,
   },
+  tabButtonActive: { backgroundColor: Brand.green },
+  tabTextActive: { color: Brand.ink },
   pressed: {
     opacity: 0.7,
   },

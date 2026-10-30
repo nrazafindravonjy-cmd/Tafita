@@ -7,7 +7,10 @@ export type PlaceDetails = {
   region: string | null;
   description_fr: string | null;
   description_en: string | null;
+  category_slug: string | null;
 };
+
+export type PlacePhoto = { storage_key: string; preview: string | null };
 
 export type Review = {
   id: string;
@@ -20,11 +23,14 @@ export type Review = {
 export async function fetchPlace(placeId: string): Promise<PlaceDetails> {
   const { data, error } = await neon
     .from('places')
-    .select('id, name, region, description_fr, description_en')
+    .select('id, name, region, description_fr, description_en, category:categories(slug)')
     .eq('id', placeId)
     .single();
   if (error) throw error;
-  return data as PlaceDetails;
+  const { category, ...place } = data as unknown as Omit<PlaceDetails, 'category_slug'> & {
+    category: { slug: string } | null;
+  };
+  return { ...place, category_slug: category?.slug ?? null };
 }
 
 export async function fetchReviews(placeId: string): Promise<Review[]> {
@@ -37,14 +43,14 @@ export async function fetchReviews(placeId: string): Promise<Review[]> {
   return (data ?? []) as unknown as Review[];
 }
 
-export async function fetchPhotoKeys(placeId: string): Promise<string[]> {
+export async function fetchPhotos(placeId: string): Promise<PlacePhoto[]> {
   const { data, error } = await neon
     .from('place_photos')
-    .select('storage_key')
+    .select('storage_key, preview')
     .eq('place_id', placeId)
     .order('created_at', { ascending: false });
   if (error) throw error;
-  return (data ?? []).map((row) => (row as { storage_key: string }).storage_key);
+  return (data ?? []) as PlacePhoto[];
 }
 
 export function photoUrl(key: string): string {
@@ -65,7 +71,7 @@ export async function createReview({ placeId, authorId, rating, body, language }
 }
 
 // Uploads a JPEG through a signed URL from our API, then records it for the place.
-export async function uploadPhoto(placeId: string, userId: string, photo: Blob): Promise<void> {
+export async function uploadPhoto(placeId: string, userId: string, photo: Blob, preview: string): Promise<void> {
   const token = (await neon.auth.getSession()).data?.session.token;
   if (!token) throw new Error('not signed in');
 
@@ -80,6 +86,6 @@ export async function uploadPhoto(placeId: string, userId: string, photo: Blob):
   const upload = await fetch(url, { method: 'PUT', headers: { 'content-type': 'image/jpeg' }, body: photo });
   if (!upload.ok) throw new Error(`upload: ${upload.status}`);
 
-  const { error } = await neon.from('place_photos').insert({ place_id: placeId, storage_key: key, uploaded_by: userId });
+  const { error } = await neon.from('place_photos').insert({ place_id: placeId, storage_key: key, uploaded_by: userId, preview });
   if (error) throw error;
 }

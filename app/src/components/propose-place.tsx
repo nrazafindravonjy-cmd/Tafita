@@ -5,7 +5,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { Button, Field } from '@/components/form';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { Spacing } from '@/constants/theme';
+import { Brand, Spacing } from '@/constants/theme';
 import type { Language } from '@/i18n';
 import { fetchCategories, proposePlace, type Category } from '@/lib/submissions';
 
@@ -112,5 +112,5 @@ const styles = StyleSheet.create({
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: Spacing.two },
   title: { flex: 1, fontSize: 18 },
   categories: { flexDirection: 'row', flexWrap: 'wrap', gap: Spacing.two },
-  error: { color: '#DC2626' },
+  error: { color: Brand.danger },
 });

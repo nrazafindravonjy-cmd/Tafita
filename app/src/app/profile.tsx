@@ -7,7 +7,7 @@ import { Button, Field } from '@/components/form';
 import { Screen } from '@/components/screen';
 import { ModerationQueue, MySubmissions } from '@/components/submissions';
 import { ThemedText } from '@/components/themed-text';
-import { Spacing } from '@/constants/theme';
+import { Brand, Spacing } from '@/constants/theme';
 import { SupportedLanguages, type Language } from '@/i18n';
 import { neon } from '@/lib/neon';
 import { createProfile, fetchProfile, updateLanguage, type Profile } from '@/lib/profiles';
@@ -100,5 +100,5 @@ const styles = StyleSheet.create({
   section: { gap: Spacing.two, marginTop: Spacing.three },
   languages: { flexDirection: 'row', gap: Spacing.two, marginTop: Spacing.two },
   language: { flex: 1 },
-  error: { color: '#DC2626' },
+  error: { color: Brand.danger },
 });

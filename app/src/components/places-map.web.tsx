@@ -133,7 +133,7 @@ export function PlacesMap({ places, onSelect, onPickLocation, pickedLocation }: 
     const map = mapRef.current;
     if (!map) return;
     const markers = places.map((place) => {
-      const marker = new maplibregl.Marker({ color: '#0F766E' }).setLngLat([place.lng, place.lat]).addTo(map);
+      const marker = new maplibregl.Marker({ color: '#60D42D' }).setLngLat([place.lng, place.lat]).addTo(map);
       const element = marker.getElement();
       element.style.cursor = 'pointer';
       element.title = place.region ? `${place.name} · ${place.region}` : place.name;
@@ -194,9 +194,9 @@ const styles = {
     padding: '6px 12px',
     border: 'none',
     borderRadius: 8,
-    background: '#ffffff',
-    color: '#000000',
-    fontWeight: 600,
+    background: '#FFE7BE',
+    color: '#1E3A12',
+    fontFamily: 'BricolageGrotesque_700Bold, sans-serif',
     boxShadow: '0 0 0 2px rgba(0, 0, 0, 0.1)',
     cursor: 'pointer',
   },

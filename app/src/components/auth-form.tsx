@@ -4,7 +4,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { Button, Field } from '@/components/form';
 import { ThemedText } from '@/components/themed-text';
-import { Spacing } from '@/constants/theme';
+import { Brand, Spacing } from '@/constants/theme';
 import { neon } from '@/lib/neon';
 
 type Mode = 'signIn' | 'signUp';
@@ -78,5 +78,5 @@ export function AuthForm() {
 
 const styles = StyleSheet.create({
   form: { gap: Spacing.two, marginTop: Spacing.three },
-  error: { color: '#DC2626' },
+  error: { color: Brand.danger },
 });
