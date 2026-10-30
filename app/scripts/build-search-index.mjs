@@ -1,10 +1,11 @@
 // Builds public/search-index.json from OpenStreetMap through the free Overpass
-// API. It runs before each Vercel build; on failure the build goes on without
-// the index and the map search falls back to Nominatim.
+// API. It runs before each Vercel build but keeps the committed index, which
+// also has area bounds, unless REFRESH_SEARCH_INDEX=1. On failure the build
+// goes on and the map search falls back to Nominatim.
 //
 // Each entry is [name, lat, lng, kind, rank]; lower ranks are more prominent.
 
-import { mkdir, writeFile } from 'node:fs/promises';
+import { access, mkdir, writeFile } from 'node:fs/promises';
 
 const OUTPUT = new URL('../public/search-index.json', import.meta.url);
 const ENDPOINT = 'https://overpass-api.de/api/interpreter';
@@ -57,6 +58,11 @@ export function toEntries(elements) {
 }
 
 async function main() {
+  const exists = await access(OUTPUT).then(() => true, () => false);
+  if (exists && process.env.REFRESH_SEARCH_INDEX !== '1') {
+    console.log('Search index: keeping the committed file');
+    return;
+  }
   const query = `[out:json][timeout:180];
 area["ISO3166-1"="MG"][admin_level=2]->.mg;
 (

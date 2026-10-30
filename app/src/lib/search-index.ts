@@ -1,9 +1,10 @@
 import type { GeocodeResult } from '@/lib/geocode';
 
-// [name, lat, lng, kind, rank], built by scripts/build-search-index.mjs.
-type IndexEntry = [string, number, number, string, number];
+// [name, lat, lng, kind, rank, bounds?], where bounds are [south, north, west, east]
+// for areas. Built from OpenStreetMap; see scripts/build-search-index.mjs.
+type IndexEntry = [string, number, number, string, number, [number, number, number, number]?];
 
-// Overpass gives centers only, so the zoom follows how big each rank of place is.
+// Without bounds, the zoom follows how big each rank of place usually is.
 const ZOOM_BY_RANK = [11, 12, 11, 14, 15, 17];
 
 export type IndexedPlace = GeocodeResult & { kind: string };
@@ -21,8 +22,8 @@ export function loadSearchIndex(): Promise<Searchable[]> {
   loading ??= fetch('/search-index.json')
     .then((response) => (response.ok ? (response.json() as Promise<IndexEntry[]>) : []))
     .then((entries) =>
-      entries.map(([name, lat, lng, kind, rank]) => ({
-        place: { name, lat, lng, kind, bounds: null, zoom: ZOOM_BY_RANK[rank] },
+      entries.map(([name, lat, lng, kind, rank, bounds]) => ({
+        place: { name, lat, lng, kind, bounds: bounds ?? null, zoom: ZOOM_BY_RANK[rank] },
         rank,
         key: normalize(name),
       })),

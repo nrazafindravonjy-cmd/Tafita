@@ -44,6 +44,3 @@ example
 
 # local env
 .env
-
-# generated at build time
-/public/search-index.json
