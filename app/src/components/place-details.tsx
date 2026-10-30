@@ -6,6 +6,7 @@ import { ActivityIndicator, Linking, Platform, Pressable, ScrollView, StyleSheet
 
 import { Button, Field } from '@/components/form';
 import { PhotoPicker } from '@/components/photo-picker';
+import { ReportButton } from '@/components/report-button';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Brand, Colors, Spacing } from '@/constants/theme';
@@ -123,15 +124,17 @@ export function PlaceDetails({ placeId, onClose }: PlaceDetailsProps) {
           {photos.length > 0 && (
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.photos}>
               {photos.map((photo) => (
-                <Image
-                  key={photo.storage_key}
-                  source={photoUrl(photo.storage_key)}
-                  placeholder={photo.preview ? { uri: photo.preview } : undefined}
-                  placeholderContentFit="cover"
-                  transition={200}
-                  style={styles.photo}
-                  contentFit="cover"
-                />
+                <View key={photo.storage_key} style={styles.photoItem}>
+                  <Image
+                    source={photoUrl(photo.storage_key)}
+                    placeholder={photo.preview ? { uri: photo.preview } : undefined}
+                    placeholderContentFit="cover"
+                    transition={200}
+                    style={styles.photo}
+                    contentFit="cover"
+                  />
+                  <ReportButton target="photo" targetId={photo.id} />
+                </View>
               ))}
             </ScrollView>
           )}
@@ -146,6 +149,7 @@ export function PlaceDetails({ placeId, onClose }: PlaceDetailsProps) {
                 @{review.author?.username ?? '?'}
               </ThemedText>
               {review.body && <ThemedText type="small">{review.body}</ThemedText>}
+              <ReportButton target="review" targetId={review.id} />
             </View>
           ))}
         </View>
@@ -238,6 +242,7 @@ const styles = StyleSheet.create({
   description: { fontSize: 17, lineHeight: 26 },
   credit: { fontSize: 11, lineHeight: 14 },
   photos: { gap: Spacing.two },
+  photoItem: { gap: Spacing.one, width: 220 },
   photo: { width: 220, height: 160, borderRadius: 16 },
   form: { gap: Spacing.two, padding: Spacing.three, borderRadius: 20, backgroundColor: Colors.dark.backgroundElement },
   stars: { color: Brand.green, letterSpacing: 1 },

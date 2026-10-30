@@ -144,5 +144,43 @@
     "food": "Food",
     "hidden-gem": "Hidden gem",
     "beach": "Beaches and islands"
+  },
+  "report": {
+    "action": "Report",
+    "sent": "Thank you, the report was sent to the moderators.",
+    "signIn": "Sign in from the Profile tab to report content.",
+    "reasons": {
+      "inappropriate": "Inappropriate or offensive",
+      "false": "False or misleading",
+      "spam": "Advertising or spam",
+      "rights": "Stolen photo or recognisable person"
+    },
+    "queue": "Reports ({{count}} pending)",
+    "empty": "No reports pending.",
+    "types": {
+      "review": "Review",
+      "photo": "Photo"
+    },
+    "gone": "This content was already deleted.",
+    "remove": "Delete the content",
+    "dismiss": "Dismiss"
+  },
+  "legal": {
+    "privacy": "Privacy",
+    "terms": "Terms of use",
+    "back": "Back",
+    "updated": "Updated on {{date}}",
+    "consentStart": "By creating an account, you accept the",
+    "consentMiddle": "and the",
+    "termsInline": "terms of use",
+    "privacyInline": "privacy policy"
+  },
+  "account": {
+    "delete": "Delete my account",
+    "confirmTitle": "Delete your account for good?",
+    "confirmBody": "Your profile, reviews, photos and reports will be erased. Published places you suggested will stay visible, without your name. This cannot be undone.",
+    "cancel": "Cancel",
+    "confirm": "Delete",
+    "partial": "Your profile and content were deleted, but your sign-in account could not be removed automatically. Write to the address given in the privacy policy to finish the deletion."
   }
 }

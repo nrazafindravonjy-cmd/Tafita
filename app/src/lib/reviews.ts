@@ -10,7 +10,7 @@ export type PlaceDetails = {
   category_slug: string | null;
 };
 
-export type PlacePhoto = { storage_key: string; preview: string | null };
+export type PlacePhoto = { id: string; storage_key: string; preview: string | null };
 
 export type Review = {
   id: string;
@@ -46,7 +46,7 @@ export async function fetchReviews(placeId: string): Promise<Review[]> {
 export async function fetchPhotos(placeId: string): Promise<PlacePhoto[]> {
   const { data, error } = await neon
     .from('place_photos')
-    .select('storage_key, preview')
+    .select('id, storage_key, preview')
     .eq('place_id', placeId)
     .order('created_at', { ascending: false });
   if (error) throw error;

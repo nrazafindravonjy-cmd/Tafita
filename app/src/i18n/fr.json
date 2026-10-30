@@ -144,5 +144,43 @@
     "food": "Gastronomie",
     "hidden-gem": "Pépite",
     "beach": "Plages et îles"
+  },
+  "report": {
+    "action": "Signaler",
+    "sent": "Merci, le signalement a été envoyé aux modérateurs.",
+    "signIn": "Connectez-vous dans le Profil pour signaler un contenu.",
+    "reasons": {
+      "inappropriate": "Inapproprié ou offensant",
+      "false": "Faux ou trompeur",
+      "spam": "Publicité ou spam",
+      "rights": "Photo volée ou personne reconnaissable"
+    },
+    "queue": "Signalements ({{count}} en attente)",
+    "empty": "Aucun signalement en attente.",
+    "types": {
+      "review": "Avis",
+      "photo": "Photo"
+    },
+    "gone": "Ce contenu a déjà été supprimé.",
+    "remove": "Supprimer le contenu",
+    "dismiss": "Ignorer"
+  },
+  "legal": {
+    "privacy": "Confidentialité",
+    "terms": "Conditions d'utilisation",
+    "back": "Retour",
+    "updated": "Mise à jour le {{date}}",
+    "consentStart": "En créant un compte, vous acceptez les",
+    "consentMiddle": "et la",
+    "termsInline": "conditions d'utilisation",
+    "privacyInline": "politique de confidentialité"
+  },
+  "account": {
+    "delete": "Supprimer mon compte",
+    "confirmTitle": "Supprimer définitivement votre compte ?",
+    "confirmBody": "Votre profil, vos avis, vos photos et vos signalements seront effacés. Les lieux publiés que vous avez proposés resteront visibles, sans votre nom. Cette action est irréversible.",
+    "cancel": "Annuler",
+    "confirm": "Supprimer",
+    "partial": "Votre profil et vos contenus ont été supprimés, mais votre identifiant de connexion n'a pas pu l'être automatiquement. Écrivez-nous à l'adresse indiquée dans la politique de confidentialité pour finaliser la suppression."
   }
 }

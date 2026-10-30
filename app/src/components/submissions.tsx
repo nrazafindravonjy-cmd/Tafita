@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Image } from 'expo-image';
 import { Linking, StyleSheet, View } from 'react-native';
 
 import { Button } from '@/components/form';
@@ -11,6 +12,8 @@ import {
   moderatePlace,
   type Submission,
 } from '@/lib/submissions';
+import { fetchOpenReports, removeReportedContent, resolveReport, type OpenReport } from '@/lib/reports';
+import { photoUrl } from '@/lib/reviews';
 
 function osmLink(submission: Submission) {
   return `https://www.openstreetmap.org/?mlat=${submission.lat}&mlon=${submission.lng}#map=16/${submission.lat}/${submission.lng}`;
@@ -94,7 +97,66 @@ export function ModerationQueue() {
   );
 }
 
+export function ReportsQueue() {
+  const { t } = useTranslation();
+  const [reports, setReports] = useState<OpenReport[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const load = useCallback(() => {
+    fetchOpenReports().then(setReports, () => setError(t('common.loadError')));
+  }, [t]);
+
+  useEffect(load, [load]);
+
+  async function act(action: () => Promise<void>) {
+    setError(null);
+    try {
+      await action();
+      load();
+    } catch {
+      setError(t('auth.genericError'));
+    }
+  }
+
+  return (
+    <View style={styles.section}>
+      <ThemedText type="smallBold">{t('report.queue', { count: reports?.length ?? 0 })}</ThemedText>
+      {error && <ThemedText style={styles.error}>{error}</ThemedText>}
+      {reports?.length === 0 && <ThemedText themeColor="textSecondary">{t('report.empty')}</ThemedText>}
+      {reports?.map((report) => (
+        <View key={report.id} style={styles.card}>
+          <ThemedText type="smallBold">
+            {t(`report.types.${report.target_type}`)} · {t(`report.reasons.${report.reason}`)}
+          </ThemedText>
+          {report.review && (
+            <ThemedText type="small">
+              {'★'.repeat(report.review.rating)} @{report.review.author ?? '?'} — {report.review.body ?? ''}
+            </ThemedText>
+          )}
+          {report.photo && (
+            <Image source={photoUrl(report.photo.storage_key)} style={styles.thumb} contentFit="cover" />
+          )}
+          {!report.review && !report.photo && (
+            <ThemedText type="small" themeColor="textSecondary">{t('report.gone')}</ThemedText>
+          )}
+          <View style={styles.actions}>
+            {(report.review || report.photo) && (
+              <View style={styles.action}>
+                <Button label={t('report.remove')} onPress={() => act(() => removeReportedContent(report))} />
+              </View>
+            )}
+            <View style={styles.action}>
+              <Button secondary label={t('report.dismiss')} onPress={() => act(() => resolveReport(report.id))} />
+            </View>
+          </View>
+        </View>
+      ))}
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
+  thumb: { width: '100%', maxWidth: 320, aspectRatio: 4 / 3, borderRadius: 12 },
   section: { gap: Spacing.two, marginTop: Spacing.three },
   card: { gap: Spacing.one, paddingVertical: Spacing.two },
   actions: { flexDirection: 'row', gap: Spacing.two },

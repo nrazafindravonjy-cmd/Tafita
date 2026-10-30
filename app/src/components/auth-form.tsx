@@ -1,15 +1,18 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import { Button, Field } from '@/components/form';
 import { ThemedText } from '@/components/themed-text';
+import type { LegalDocumentId } from '@/constants/legal';
 import { Brand, Spacing } from '@/constants/theme';
 import { neon } from '@/lib/neon';
 
 type Mode = 'signIn' | 'signUp';
 
-export function AuthForm() {
+type AuthFormProps = { onOpenLegal: (id: LegalDocumentId) => void };
+
+export function AuthForm({ onOpenLegal }: AuthFormProps) {
   const { t } = useTranslation();
   const [mode, setMode] = useState<Mode>('signIn');
   const [name, setName] = useState('');
@@ -63,6 +66,19 @@ export function AuthForm() {
         autoComplete={mode === 'signUp' ? 'new-password' : 'current-password'}
       />
       {error && <ThemedText style={styles.error}>{error}</ThemedText>}
+      {mode === 'signUp' && (
+        <ThemedText type="small" themeColor="textSecondary">
+          {t('legal.consentStart')}{' '}
+          <ThemedText type="small" style={styles.link} onPress={() => onOpenLegal('terms')}>
+            {t('legal.termsInline')}
+          </ThemedText>{' '}
+          {t('legal.consentMiddle')}{' '}
+          <ThemedText type="small" style={styles.link} onPress={() => onOpenLegal('privacy')}>
+            {t('legal.privacyInline')}
+          </ThemedText>
+          .
+        </ThemedText>
+      )}
       <Button label={t(`auth.${mode}.submit`)} onPress={submit} disabled={busy} />
       <Button
         secondary
@@ -79,4 +95,5 @@ export function AuthForm() {
 const styles = StyleSheet.create({
   form: { gap: Spacing.two, marginTop: Spacing.three },
   error: { color: Brand.danger },
+  link: { textDecorationLine: 'underline' },
 });
