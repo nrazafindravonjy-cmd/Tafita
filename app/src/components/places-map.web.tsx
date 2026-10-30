@@ -176,7 +176,13 @@ export function PlacesMap({
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'bottom-right');
     const popup = new maplibregl.Popup({ closeButton: false, offset: 8 });
     // A style change drops our source and layers, so they are added back each time.
-    map.on('styledata', () => addPlaceLayers(map, dataRef.current));
+    map.on('styledata', () => {
+      if (map.isStyleLoaded()) addPlaceLayers(map, dataRef.current);
+    });
+    // The compact credits open by default on load; keep them folded to the "i" button.
+    map.once('load', () =>
+      map.getContainer().querySelector('.maplibregl-ctrl-attrib')?.classList.remove('maplibregl-compact-show'),
+    );
     map.on('click', (event) => {
       if (pickRef.current) {
         popup.remove();
@@ -243,7 +249,10 @@ export function PlacesMap({
 
   useEffect(() => {
     const map = mapRef.current;
-    if (map?.isStyleLoaded()) addPlaceLayers(map, dataRef.current);
+    if (!map) return;
+    // Places can arrive before the style finishes loading; add them once it has.
+    if (map.isStyleLoaded()) addPlaceLayers(map, dataRef.current);
+    else map.once('idle', () => addPlaceLayers(map, dataRef.current));
   }, [places, selectedId]);
 
   useEffect(() => {
@@ -283,7 +292,7 @@ export function PlacesMap({
       <div ref={containerRef} style={styles.map} />
       <button
         type="button"
-        style={{ ...styles.toggle, bottom: insets.bottom + 16 }}
+        style={{ ...styles.toggle, top: insets.top + 72 }}
         onClick={() => setBaseLayer(nextLayer)}>
         {t(`map.layers.${nextLayer}`)}
       </button>
