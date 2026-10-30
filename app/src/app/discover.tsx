@@ -90,7 +90,9 @@ export default function DiscoverScreen() {
                   </ThemedText>
                 </View>
                 <View style={styles.caption}>
-                  <ThemedText type="subtitle">{place.name}</ThemedText>
+                  <ThemedText type="subtitle" style={columns > 1 && styles.compactTitle}>
+                    {place.name}
+                  </ThemedText>
                   {place.region && <ThemedText type="smallBold">{place.region}</ThemedText>}
                 </View>
               </Pressable>
@@ -133,4 +135,6 @@ const styles = StyleSheet.create({
   },
   pillText: { color: Brand.ink, fontSize: 12, lineHeight: 16 },
   caption: { padding: Spacing.three, gap: Spacing.half },
+  // Narrow columns would otherwise break long names mid-word.
+  compactTitle: { fontSize: 24, lineHeight: 27 },
 });
