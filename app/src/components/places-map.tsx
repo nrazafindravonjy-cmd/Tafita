@@ -7,7 +7,12 @@ import type { PlaceMarker } from '@/lib/places';
 
 // The native map needs a development build with MapLibre Native; until then
 // the mobile app lists the same places.
-type PlacesMapProps = { places: PlaceMarker[]; onSelect: (placeId: string) => void };
+type PlacesMapProps = {
+  places: PlaceMarker[];
+  onSelect: (placeId: string) => void;
+  onPickLocation?: (location: { lat: number; lng: number }) => void;
+  pickedLocation?: { lat: number; lng: number } | null;
+};
 
 export function PlacesMap({ places, onSelect }: PlacesMapProps) {
   return (

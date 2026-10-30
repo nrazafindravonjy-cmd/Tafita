@@ -105,5 +105,38 @@
     "addPhotos": "Ajouter des photos ({{count}})",
     "publish": "Publier",
     "alreadyReviewed": "Vous avez déjà donné votre avis sur ce lieu."
+  },
+  "propose": {
+    "open": "Proposer un lieu",
+    "title": "Proposer un lieu",
+    "mapHint": "Touchez la carte pour placer le lieu proposé.",
+    "pickLocation": "Touchez la carte pour placer le lieu.",
+    "located": "Position : {{lat}}, {{lng}}",
+    "name": "Nom du lieu",
+    "region": "Région (facultatif)",
+    "description": "Pourquoi ce lieu vaut le détour (facultatif)",
+    "missingFields": "Indiquez un nom et une catégorie.",
+    "submit": "Envoyer la proposition",
+    "sent": "Merci ! Votre proposition sera visible sur la carte dès qu’un modérateur l’aura validée."
+  },
+  "submissions": {
+    "mine": "Mes propositions",
+    "moderation": "Modération ({{count}} en attente)",
+    "empty": "Aucun lieu en attente.",
+    "viewMap": "Voir la position",
+    "publish": "Publier",
+    "reject": "Refuser",
+    "status": {
+      "pending": "en attente",
+      "published": "publié",
+      "rejected": "refusé"
+    }
+  },
+  "categories": {
+    "nature": "nature et parcs",
+    "culture": "culture et patrimoine",
+    "food": "gastronomie",
+    "hidden-gem": "pépite",
+    "beach": "plages et îles"
   }
 }

@@ -5,6 +5,7 @@ import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { AuthForm } from '@/components/auth-form';
 import { Button, Field } from '@/components/form';
 import { Screen } from '@/components/screen';
+import { ModerationQueue, MySubmissions } from '@/components/submissions';
 import { ThemedText } from '@/components/themed-text';
 import { Spacing } from '@/constants/theme';
 import { SupportedLanguages, type Language } from '@/i18n';
@@ -65,6 +66,8 @@ function Account({ userId, email }: { userId: string; email: string }) {
       <ThemedText themeColor="textSecondary">{email}</ThemedText>
       {error && <ThemedText style={styles.error}>{error}</ThemedText>}
       <Button secondary label={t('profile.signOut')} onPress={() => neon.auth.signOut()} />
+      {profile && <MySubmissions userId={userId} />}
+      {profile && profile.role !== 'member' && <ModerationQueue />}
     </View>
   );
 }

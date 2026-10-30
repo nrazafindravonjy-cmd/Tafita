@@ -58,13 +58,22 @@ function featureLabel(properties: Record<string, unknown>): string {
   return typeof kind === 'string' ? `${name} · ${kind.replaceAll('_', ' ')}` : String(name);
 }
 
-type PlacesMapProps = { places: PlaceMarker[]; onSelect: (placeId: string) => void };
+type PlacesMapProps = {
+  places: PlaceMarker[];
+  onSelect: (placeId: string) => void;
+  // While set, clicking the map picks a location instead of showing labels.
+  onPickLocation?: (location: { lat: number; lng: number }) => void;
+  pickedLocation?: { lat: number; lng: number } | null;
+};
 
-export function PlacesMap({ places, onSelect }: PlacesMapProps) {
+export function PlacesMap({ places, onSelect, onPickLocation, pickedLocation }: PlacesMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const [baseLayer, setBaseLayer] = useState<BaseLayer>('plan');
   const { t } = useTranslation();
+  // The click handler is bound once, so it reads the latest callback here.
+  const pickRef = useRef(onPickLocation);
+  pickRef.current = onPickLocation;
 
   useEffect(() => {
     const map = new maplibregl.Map({
@@ -76,11 +85,20 @@ export function PlacesMap({ places, onSelect }: PlacesMapProps) {
     map.addControl(new maplibregl.NavigationControl(), 'top-right');
     const popup = new maplibregl.Popup({ closeButton: false, offset: 8 });
     map.on('click', (event) => {
+      if (pickRef.current) {
+        popup.remove();
+        pickRef.current({ lat: event.lngLat.lat, lng: event.lngLat.lng });
+        return;
+      }
       const [feature] = labelsAt(map, event.point);
       if (feature) popup.setLngLat(event.lngLat).setText(featureLabel(feature.properties)).addTo(map);
       else popup.remove();
     });
     map.on('mousemove', (event) => {
+      if (pickRef.current) {
+        map.getCanvas().style.cursor = 'crosshair';
+        return;
+      }
       map.getCanvas().style.cursor = labelsAt(map, event.point).length ? 'pointer' : '';
     });
     mapRef.current = map;
@@ -124,6 +142,17 @@ export function PlacesMap({ places, onSelect }: PlacesMapProps) {
     });
     return () => markers.forEach((marker) => marker.remove());
   }, [places, onSelect]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !pickedLocation) return;
+    const marker = new maplibregl.Marker({ color: '#F59E0B' })
+      .setLngLat([pickedLocation.lng, pickedLocation.lat])
+      .addTo(map);
+    return () => {
+      marker.remove();
+    };
+  }, [pickedLocation]);
 
   function goTo(pick: SearchPick) {
     const map = mapRef.current;

@@ -105,5 +105,38 @@
     "addPhotos": "Add photos ({{count}})",
     "publish": "Publish",
     "alreadyReviewed": "You have already reviewed this place."
+  },
+  "propose": {
+    "open": "Suggest a place",
+    "title": "Suggest a place",
+    "mapHint": "Tap the map to position the suggested place.",
+    "pickLocation": "Tap the map to position the place.",
+    "located": "Position: {{lat}}, {{lng}}",
+    "name": "Place name",
+    "region": "Region (optional)",
+    "description": "Why this place is worth the trip (optional)",
+    "missingFields": "Enter a name and pick a category.",
+    "submit": "Send suggestion",
+    "sent": "Thank you! Your suggestion will appear on the map once a moderator approves it."
+  },
+  "submissions": {
+    "mine": "My suggestions",
+    "moderation": "Moderation ({{count}} pending)",
+    "empty": "No places pending.",
+    "viewMap": "View position",
+    "publish": "Publish",
+    "reject": "Reject",
+    "status": {
+      "pending": "pending",
+      "published": "published",
+      "rejected": "rejected"
+    }
+  },
+  "categories": {
+    "nature": "nature and parks",
+    "culture": "culture and heritage",
+    "food": "food",
+    "hidden-gem": "hidden gem",
+    "beach": "beaches and islands"
   }
 }
