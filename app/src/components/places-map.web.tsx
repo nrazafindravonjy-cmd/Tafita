@@ -4,6 +4,7 @@ import maplibregl from 'maplibre-gl';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { MapSearch, type SearchPick } from '@/components/map-search.web';
 import i18n from '@/i18n';
 import type { PlaceMarker } from '@/lib/places';
 
@@ -124,6 +125,23 @@ export function PlacesMap({ places, onSelect }: PlacesMapProps) {
     return () => markers.forEach((marker) => marker.remove());
   }, [places, onSelect]);
 
+  function goTo(pick: SearchPick) {
+    const map = mapRef.current;
+    if (!map) return;
+    if (pick.kind === 'tafita') {
+      map.flyTo({ center: [pick.place.lng, pick.place.lat], zoom: 13 });
+      onSelect(pick.place.id);
+      return;
+    }
+    const { bounds, lat, lng } = pick.result;
+    if (bounds) {
+      const [south, north, west, east] = bounds;
+      map.fitBounds([[west, south], [east, north]], { padding: 40, maxZoom: 16 });
+    } else {
+      map.flyTo({ center: [lng, lat], zoom: 15 });
+    }
+  }
+
   const nextLayer: BaseLayer = baseLayer === 'plan' ? 'satellite' : 'plan';
 
   return (
@@ -132,6 +150,7 @@ export function PlacesMap({ places, onSelect }: PlacesMapProps) {
       <button type="button" style={styles.toggle} onClick={() => setBaseLayer(nextLayer)}>
         {t(`map.layers.${nextLayer}`)}
       </button>
+      <MapSearch places={places} onPick={goTo} />
     </div>
   );
 }

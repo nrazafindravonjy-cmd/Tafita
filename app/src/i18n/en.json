@@ -10,6 +10,14 @@
     "layers": {
       "plan": "Map",
       "satellite": "Satellite"
+    },
+    "search": {
+      "open": "Search for a place",
+      "placeholder": "Search for a place in Madagascar",
+      "submit": "Search",
+      "searching": "Searching…",
+      "empty": "No results.",
+      "error": "Search failed, please try again."
     }
   },
   "discover": {
