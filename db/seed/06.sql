@@ -8,12 +8,8 @@ from (values
   ('beach', 'Île aux Nattes (Nosy Nato)', 'Analanjirofo', 'Une petite île sans voitures au sud de Sainte-Marie, bordée de plages et de lagons.', 'A small car-free island south of Sainte-Marie, fringed with beaches and lagoons.', -17.10913, 49.80703),
   ('beach', 'Anakao', 'Atsimo-Andrefana', 'Un village de pêcheurs Vezo aux plages de sable blanc, au sud de Toliara.', 'A Vezo fishing village with white-sand beaches, south of Toliara.', -23.65796, 43.64732),
   ('beach', 'Nosy Ve', 'Atsimo-Andrefana', 'Un îlot sacré face à Anakao, où nichent les phaétons à brins rouges.', 'A sacred islet off Anakao where red-tailed tropicbirds nest.', -23.64648, 43.60354),
-  ('beach', 'Plage de Libanona', 'Anosy', 'Une plage abritée de Tolagnaro, propice à la baignade et au surf.', 'A sheltered Tolagnaro beach, good for swimming and surfing.', -25.03866, 46.99442),
-  ('beach', 'Baie de Lokaro', 'Anosy', 'Une baie sauvage aux eaux turquoise, accessible en pirogue depuis Tolagnaro.', 'A wild turquoise bay reached by pirogue from Tolagnaro.', -24.94838, 47.11189),
-  ('beach', 'Ramena', 'Diana', 'Un village de pêcheurs et sa plage, point de départ vers la mer d''Émeraude.', 'A fishing village and its beach, the starting point for the Emerald Sea.', -12.24243, 49.34565),
   ('beach', 'Mer d''Émeraude', 'Diana', 'Un lagon aux eaux vert émeraude, à l''entrée de la baie d''Antsiranana.', 'An emerald-green lagoon at the entrance to Antsiranana Bay.', -12.16829, 49.36759),
-  ('beach', 'Andavadoaka', 'Atsimo-Andrefana', 'Un village Vezo isolé, connu pour ses récifs et sa gestion communautaire de la pêche.', 'A remote Vezo village known for its reefs and community-led fishing management.', -22.07305, 43.23863),
-  ('beach', 'Salary', 'Atsimo-Andrefana', 'Une longue baie tranquille entre dunes et lagon, au nord de Toliara.', 'A long, quiet bay between dunes and lagoon, north of Toliara.', -22.56164, 43.28994)
+  ('beach', 'Andavadoaka', 'Atsimo-Andrefana', 'Un village Vezo isolé, connu pour ses récifs et sa gestion communautaire de la pêche.', 'A remote Vezo village known for its reefs and community-led fishing management.', -22.07305, 43.23863)
 ) as v(category, name, region, description_fr, description_en, lat, lng)
 join categories c on c.slug = v.category
 where not exists (select 1 from places p where p.name = v.name)
