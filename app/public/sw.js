@@ -1,14 +1,26 @@
 // Tafita offline support: keeps what was viewed and what a list prepared, and
 // serves it when the network is missing.
-const VERSION = 'tafita-v2';
+const VERSION = 'tafita-v3';
 const SHELL = `${VERSION}-shell`;
 const DATA = `${VERSION}-data`;
 const MEDIA = `${VERSION}-media`;
 const TILES = `${VERSION}-tiles`;
 const LIMITS = { [MEDIA]: 400, [TILES]: 6000, [DATA]: 1500 };
 
+// Caches the page and every built file listed at build time, so all screens
+// open offline even if they were never visited online.
+async function precache() {
+  const cache = await caches.open(SHELL);
+  await cache.add('/');
+  const files = await fetch('/precache.json')
+    .then((response) => (response.ok ? response.json() : []))
+    .catch(() => []);
+  // One by one, so a single missing file does not cancel the rest.
+  for (const file of files) await cache.add(file).catch(() => null);
+}
+
 self.addEventListener('install', (event) => {
-  event.waitUntil(caches.open(SHELL).then((cache) => cache.addAll(['/'])).then(() => self.skipWaiting()));
+  event.waitUntil(precache().then(() => self.skipWaiting()));
 });
 
 self.addEventListener('activate', (event) => {
