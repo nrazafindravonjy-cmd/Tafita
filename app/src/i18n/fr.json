@@ -104,7 +104,8 @@
     "comment": "Votre commentaire (facultatif)",
     "addPhotos": "Ajouter des photos ({{count}})",
     "publish": "Publier",
-    "alreadyReviewed": "Vous avez déjà donné votre avis sur ce lieu."
+    "alreadyReviewed": "Vous avez déjà donné votre avis sur ce lieu.",
+    "photoCredit": "Photo : {{author}} · {{license}} · Wikimedia Commons"
   },
   "propose": {
     "open": "Proposer un lieu",

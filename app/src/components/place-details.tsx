@@ -1,7 +1,7 @@
 import { Image } from 'expo-image';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Linking, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import { Button, Field } from '@/components/form';
 import { PhotoPicker } from '@/components/photo-picker';
@@ -11,6 +11,7 @@ import { Spacing } from '@/constants/theme';
 import type { Language } from '@/i18n';
 import { compressImage } from '@/lib/compress-image';
 import { neon } from '@/lib/neon';
+import { loadCoverPhotos, type CoverPhoto } from '@/lib/place-photos';
 import { fetchProfile } from '@/lib/profiles';
 import {
   createReview,
@@ -31,6 +32,12 @@ export function PlaceDetails({ placeId, onClose }: PlaceDetailsProps) {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [photoKeys, setPhotoKeys] = useState<string[]>([]);
   const [failed, setFailed] = useState(false);
+  const [cover, setCover] = useState<CoverPhoto | null>(null);
+
+  useEffect(() => {
+    if (!place) return;
+    loadCoverPhotos().then((photos) => setCover(photos[place.name] ?? null));
+  }, [place]);
 
   const load = useCallback(() => {
     Promise.all([fetchPlace(placeId), fetchReviews(placeId), fetchPhotoKeys(placeId)])
@@ -60,6 +67,16 @@ export function PlaceDetails({ placeId, onClose }: PlaceDetailsProps) {
         </View>
         {failed && <ThemedText themeColor="textSecondary">{t('common.loadError')}</ThemedText>}
         {!place && !failed && <ActivityIndicator />}
+        {cover && (
+          <View style={styles.cover}>
+            <Image source={cover.url} style={styles.coverImage} contentFit="cover" accessibilityLabel={place?.name} />
+            <Pressable accessibilityRole="link" onPress={() => Linking.openURL(cover.page)}>
+              <ThemedText type="small" themeColor="textSecondary" style={styles.credit}>
+                {t('place.photoCredit', { author: cover.author, license: cover.license })}
+              </ThemedText>
+            </Pressable>
+          </View>
+        )}
         {place && (
           <>
             {place.region && <ThemedText themeColor="textSecondary">{place.region}</ThemedText>}
@@ -158,7 +175,10 @@ function ReviewForm({ placeId, onSaved }: { placeId: string; onSaved: () => void
 }
 
 const styles = StyleSheet.create({
-  panel: { borderRadius: 16, maxHeight: 420 },
+  panel: { borderRadius: 16, maxHeight: 520 },
+  cover: { gap: Spacing.half },
+  coverImage: { width: '100%', aspectRatio: 16 / 9, borderRadius: 12 },
+  credit: { fontSize: 11, lineHeight: 14 },
   content: { padding: Spacing.three, gap: Spacing.two },
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: Spacing.two },
   title: { flex: 1, fontSize: 18 },
