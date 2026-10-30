@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 import { MapSearch, type SearchPick } from '@/components/map-search.web';
 import i18n from '@/i18n';
+import type { Cyclone } from '@/lib/cyclones';
 import type { PlaceMarker } from '@/lib/places';
 
 // Centered on Madagascar, zoomed out enough to show the whole island.
@@ -141,6 +142,7 @@ type PlacesMapProps = {
   selectedId?: string | null;
   // Space taken by the floating tab bar, so controls stay clear of it.
   insets?: { top: number; bottom: number };
+  cyclones?: Cyclone[];
 };
 
 export function PlacesMap({
@@ -150,6 +152,7 @@ export function PlacesMap({
   pickedLocation,
   selectedId,
   insets = { top: 0, bottom: 0 },
+  cyclones = [],
 }: PlacesMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
@@ -265,6 +268,20 @@ export function PlacesMap({
       marker.remove();
     };
   }, [pickedLocation]);
+
+  // Current cyclones from GDACS, drawn as warning markers.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    const markers = cyclones.map((cyclone) => {
+      const element = document.createElement('div');
+      element.textContent = '🌀';
+      element.title = cyclone.name;
+      element.style.cssText = 'font-size:34px;line-height:1;filter:drop-shadow(0 0 6px rgba(255,80,40,0.9))';
+      return new maplibregl.Marker({ element }).setLngLat([cyclone.lng, cyclone.lat]).addTo(map);
+    });
+    return () => markers.forEach((marker) => marker.remove());
+  }, [cyclones]);
 
   function goTo(pick: SearchPick) {
     const map = mapRef.current;

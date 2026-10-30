@@ -6,6 +6,8 @@ import { ActivityIndicator, Linking, Platform, Pressable, ScrollView, StyleSheet
 
 import { Button, Field } from '@/components/form';
 import { PhotoPicker } from '@/components/photo-picker';
+import { PlaceActions } from '@/components/place-actions';
+import { PlaceQuestions } from '@/components/place-questions';
 import { ReportButton } from '@/components/report-button';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
@@ -123,6 +125,7 @@ export function PlaceDetails({ placeId, onClose }: PlaceDetailsProps) {
 
         <View style={styles.body}>
           {failed && <ThemedText themeColor="textSecondary">{t('common.loadError')}</ThemedText>}
+          {place && <PlaceActions placeId={placeId} placeName={place.name} />}
           {description && <ThemedText style={styles.description}>{description}</ThemedText>}
           {cover && (
             <Pressable accessibilityRole="link" onPress={() => Linking.openURL(cover.page)}>
@@ -162,6 +165,7 @@ export function PlaceDetails({ placeId, onClose }: PlaceDetailsProps) {
               <ReportButton target="review" targetId={review.id} />
             </View>
           ))}
+          {place && <PlaceQuestions placeId={placeId} />}
         </View>
       </ScrollView>
     </ThemedView>

@@ -1,14 +1,18 @@
 import { Image } from 'expo-image';
+import { useLocalSearchParams } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Pressable, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
 
+import { ListView } from '@/components/list-view';
 import { PlaceDetails } from '@/components/place-details';
 import { Screen } from '@/components/screen';
 import { ThemedText } from '@/components/themed-text';
 import { Brand, Colors, MaxContentWidth, Spacing } from '@/constants/theme';
 import { loadCoverPhotos, previewUrl, type CoverPhoto } from '@/lib/place-photos';
+import { fetchList, type PlaceList } from '@/lib/lists';
+import { neon } from '@/lib/neon';
 import { fetchPlaceMarkers, type PlaceMarker } from '@/lib/places';
 
 const CATEGORIES = ['nature', 'beach', 'culture', 'food', 'hidden-gem'] as const;
@@ -21,6 +25,14 @@ export default function DiscoverScreen() {
   const [category, setCategory] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [failed, setFailed] = useState(false);
+  // A shared list link (?list=…) opens that list over the feed.
+  const { list: linkedList } = useLocalSearchParams<{ list?: string }>();
+  const [sharedList, setSharedList] = useState<PlaceList | null>(null);
+  const userId = neon.auth.useSession().data?.user.id;
+
+  useEffect(() => {
+    if (linkedList) fetchList(linkedList).then(setSharedList, () => {});
+  }, [linkedList]);
 
   useEffect(() => {
     Promise.all([fetchPlaceMarkers(), loadCoverPhotos()])
@@ -101,6 +113,13 @@ export default function DiscoverScreen() {
         </ScrollView>
       </Screen>
       {selectedId && <PlaceDetails key={selectedId} placeId={selectedId} onClose={() => setSelectedId(null)} />}
+      {sharedList && (
+        <ListView
+          list={sharedList}
+          editable={Boolean(userId) && sharedList.owner_id === userId}
+          onClose={() => setSharedList(null)}
+        />
+      )}
     </View>
   );
 }

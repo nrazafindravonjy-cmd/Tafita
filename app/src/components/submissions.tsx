@@ -136,11 +136,16 @@ export function ReportsQueue() {
           {report.photo && (
             <Image source={photoUrl(report.photo.storage_key)} style={styles.thumb} contentFit="cover" />
           )}
-          {!report.review && !report.photo && (
+          {report.text && (
+            <ThemedText type="small">
+              @{report.text.author ?? '?'} — {report.text.body}
+            </ThemedText>
+          )}
+          {!report.review && !report.photo && !report.text && (
             <ThemedText type="small" themeColor="textSecondary">{t('report.gone')}</ThemedText>
           )}
           <View style={styles.actions}>
-            {(report.review || report.photo) && (
+            {(report.review || report.photo || report.text) && (
               <View style={styles.action}>
                 <Button label={t('report.remove')} onPress={() => act(() => removeReportedContent(report))} />
               </View>

@@ -12,9 +12,11 @@ import * as SplashScreen from 'expo-splash-screen';
 import { AnimatedSplashOverlay } from '@/components/animated-icon';
 import AppTabs from '@/components/app-tabs';
 import { Colors } from '@/constants/theme';
+import { registerOfflineSupport } from '@/lib/offline';
 import '@/i18n';
 
 SplashScreen.preventAutoHideAsync();
+registerOfflineSupport();
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({

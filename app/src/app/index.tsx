@@ -1,6 +1,7 @@
+import { useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Linking, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { PlaceDetails } from '@/components/place-details';
@@ -11,6 +12,7 @@ import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Brand, Colors, Spacing } from '@/constants/theme';
 import { NavBarHeight, useNavLayout } from '@/hooks/use-nav-layout';
+import { fetchCyclones, type Cyclone } from '@/lib/cyclones';
 import { neon } from '@/lib/neon';
 import { fetchPlaceMarkers, type PlaceMarker } from '@/lib/places';
 
@@ -26,9 +28,16 @@ export default function MapScreen() {
   const [failed, setFailed] = useState(false);
   // Tapping a place previews it; opening the preview shows the full page.
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [openId, setOpenId] = useState<string | null>(null);
+  // A shared place link (?place=…) opens that place's page directly.
+  const { place: linkedPlace } = useLocalSearchParams<{ place?: string }>();
+  const [openId, setOpenId] = useState<string | null>(linkedPlace ?? null);
   const [proposing, setProposing] = useState(false);
   const [pickedLocation, setPickedLocation] = useState<Location | null>(null);
+
+  const [cyclones, setCyclones] = useState<Cyclone[]>([]);
+  useEffect(() => {
+    fetchCyclones().then(setCyclones, () => {});
+  }, []);
 
   useEffect(() => {
     fetchPlaceMarkers()
@@ -61,7 +70,20 @@ export default function MapScreen() {
         pickedLocation={pickedLocation}
         selectedId={selectedId}
         insets={insets}
+        cyclones={cyclones}
       />
+
+      {cyclones.length > 0 && !proposing && (
+        <Pressable
+          accessibilityRole="link"
+          onPress={() => cyclones[0].report && Linking.openURL(cyclones[0].report)}
+          style={[styles.banner, styles.alert, { top: insets.top + 120 }]}>
+          <ThemedText type="smallBold" style={styles.alertText}>
+            🌀 {cyclones.map((c) => t('cyclone.alert', { name: c.name, level: t(`cyclone.levels.${c.level}`, { defaultValue: c.level }) })).join(' · ')}
+          </ThemedText>
+          <ThemedText type="small" style={styles.alertText}>{t('cyclone.source')}</ThemedText>
+        </Pressable>
+      )}
 
       {failed && (
         <View style={[styles.banner, { top: insets.top + 72 }]}>
@@ -122,6 +144,8 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     backgroundColor: Colors.dark.backgroundElement,
   },
+  alert: { backgroundColor: '#FFB38A' },
+  alertText: { color: Brand.ink },
   sheet: {
     position: 'absolute',
     left: Spacing.three,

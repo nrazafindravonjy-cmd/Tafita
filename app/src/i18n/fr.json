@@ -185,5 +185,100 @@
   },
   "preview": {
     "open": "Ouvrir la fiche de {{name}}"
+  },
+  "actions": {
+    "save": "♡ Enregistrer",
+    "saved": "♥ Enregistré",
+    "markVisited": "✓ J'y suis allé",
+    "visited": "✓ Visité",
+    "share": "Partager",
+    "copied": "Lien copié.",
+    "signIn": "Connectez-vous dans le Profil pour utiliser cette fonction."
+  },
+  "lists": {
+    "defaultName": "Mes envies",
+    "count_one": "{{count}} lieu",
+    "count_other": "{{count}} lieux",
+    "newPlaceholder": "Nouvelle liste (ex. Voyage dans le Sud)",
+    "create": "Créer",
+    "mine": "Mes listes",
+    "empty": "Enregistrez des lieux depuis leur fiche avec « ♡ Enregistrer ».",
+    "emptyList": "Cette liste est vide.",
+    "share": "Partager la liste",
+    "shared": "Partagée",
+    "copyLink": "Copier le lien",
+    "moveUp": "Monter",
+    "moveDown": "Descendre",
+    "delete": "Supprimer cette liste"
+  },
+  "itinerary": {
+    "title": "Itinéraire en voiture",
+    "loading": "Calcul des trajets…",
+    "error": "Les trajets ne peuvent pas être calculés pour le moment.",
+    "noRoute": "Aucun trajet routier trouvé entre ces lieux (îles ou zones sans route).",
+    "total": "{{km}} km au total · environ {{time}} de route",
+    "caveat": "Estimation tirée des routes d'OpenStreetMap. À Madagascar, l'état des routes et des pistes, surtout en saison des pluies, peut fortement allonger les trajets."
+  },
+  "questions": {
+    "title": "Questions et réponses",
+    "empty": "Aucune question pour le moment. Posez la première !",
+    "ask": "Poser la question",
+    "askPlaceholder": "Votre question sur ce lieu (accès, meilleure saison, prix…)",
+    "answer": "Répondre",
+    "answerPlaceholder": "Votre réponse",
+    "send": "Envoyer",
+    "signIn": "Connectez-vous dans le Profil pour poser une question ou répondre.",
+    "tooShort": "Le message est trop court, ou une erreur est survenue."
+  },
+  "levels": {
+    "title": "Votre niveau",
+    "explorer": "Explorateur",
+    "traveller": "Voyageur",
+    "guide": "Guide",
+    "ambassador": "Ambassadeur",
+    "toNext": "Encore {{points}} points pour devenir {{level}}.",
+    "top": "Vous avez atteint le plus haut niveau.",
+    "summary": "{{reviews}} avis · {{photos}} photos · {{places}} lieux publiés · {{answers}} réponses",
+    "visited": "{{count}} lieux visités sur {{total}}"
+  },
+  "badges": {
+    "firstReview": {
+      "name": "Premier avis",
+      "how": "Publier un avis"
+    },
+    "photographer": {
+      "name": "Photographe",
+      "how": "Partager 5 photos"
+    },
+    "scout": {
+      "name": "Éclaireur",
+      "how": "Faire publier un lieu"
+    },
+    "helper": {
+      "name": "Bon conseil",
+      "how": "Répondre à 5 questions"
+    },
+    "traveller10": {
+      "name": "Globe-trotteur",
+      "how": "Visiter 10 lieux"
+    },
+    "allIsland": {
+      "name": "Tour de l'île",
+      "how": "Visiter 30 lieux"
+    }
+  },
+  "offline": {
+    "prepare": "⬇ Préparer pour hors connexion",
+    "progress": "Téléchargement… {{percent}} %",
+    "ready": "✓ Disponible hors connexion"
+  },
+  "cyclone": {
+    "alert": "Cyclone {{name}} : alerte {{level}}",
+    "levels": {
+      "green": "verte",
+      "orange": "orange",
+      "red": "rouge"
+    },
+    "source": "Source : GDACS (ONU et Commission européenne). Touchez pour le rapport."
   }
 }

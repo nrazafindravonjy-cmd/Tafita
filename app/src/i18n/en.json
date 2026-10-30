@@ -185,5 +185,100 @@
   },
   "preview": {
     "open": "Open the page of {{name}}"
+  },
+  "actions": {
+    "save": "♡ Save",
+    "saved": "♥ Saved",
+    "markVisited": "✓ I’ve been here",
+    "visited": "✓ Visited",
+    "share": "Share",
+    "copied": "Link copied.",
+    "signIn": "Sign in from the Profile tab to use this."
+  },
+  "lists": {
+    "defaultName": "Wish list",
+    "count_one": "{{count}} place",
+    "count_other": "{{count}} places",
+    "newPlaceholder": "New list (e.g. Trip to the South)",
+    "create": "Create",
+    "mine": "My lists",
+    "empty": "Save places from their page with “♡ Save”.",
+    "emptyList": "This list is empty.",
+    "share": "Share the list",
+    "shared": "Shared",
+    "copyLink": "Copy link",
+    "moveUp": "Move up",
+    "moveDown": "Move down",
+    "delete": "Delete this list"
+  },
+  "itinerary": {
+    "title": "Driving itinerary",
+    "loading": "Working out the drives…",
+    "error": "Drives cannot be worked out right now.",
+    "noRoute": "No road found between these places (islands or areas without roads).",
+    "total": "{{km}} km in total · about {{time}} of driving",
+    "caveat": "Estimated from OpenStreetMap roads. In Madagascar, road and track conditions, especially in the rainy season, can make journeys much longer."
+  },
+  "questions": {
+    "title": "Questions and answers",
+    "empty": "No questions yet. Ask the first one!",
+    "ask": "Ask the question",
+    "askPlaceholder": "Your question about this place (access, best season, prices…)",
+    "answer": "Answer",
+    "answerPlaceholder": "Your answer",
+    "send": "Send",
+    "signIn": "Sign in from the Profile tab to ask or answer.",
+    "tooShort": "The message is too short, or something went wrong."
+  },
+  "levels": {
+    "title": "Your level",
+    "explorer": "Explorer",
+    "traveller": "Traveller",
+    "guide": "Guide",
+    "ambassador": "Ambassador",
+    "toNext": "{{points}} more points to become {{level}}.",
+    "top": "You have reached the highest level.",
+    "summary": "{{reviews}} reviews · {{photos}} photos · {{places}} places published · {{answers}} answers",
+    "visited": "{{count}} of {{total}} places visited"
+  },
+  "badges": {
+    "firstReview": {
+      "name": "First review",
+      "how": "Publish a review"
+    },
+    "photographer": {
+      "name": "Photographer",
+      "how": "Share 5 photos"
+    },
+    "scout": {
+      "name": "Scout",
+      "how": "Get a place published"
+    },
+    "helper": {
+      "name": "Good advice",
+      "how": "Answer 5 questions"
+    },
+    "traveller10": {
+      "name": "Globetrotter",
+      "how": "Visit 10 places"
+    },
+    "allIsland": {
+      "name": "Round the island",
+      "how": "Visit 30 places"
+    }
+  },
+  "offline": {
+    "prepare": "⬇ Make available offline",
+    "progress": "Downloading… {{percent}}%",
+    "ready": "✓ Available offline"
+  },
+  "cyclone": {
+    "alert": "Cyclone {{name}}: {{level}} alert",
+    "levels": {
+      "green": "green",
+      "orange": "orange",
+      "red": "red"
+    },
+    "source": "Source: GDACS (UN and European Commission). Tap for the report."
   }
 }

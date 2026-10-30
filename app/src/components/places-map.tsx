@@ -14,6 +14,7 @@ type PlacesMapProps = {
   pickedLocation?: { lat: number; lng: number } | null;
   selectedId?: string | null;
   insets?: { top: number; bottom: number };
+  cyclones?: unknown[];
 };
 
 export function PlacesMap({ places, onSelect }: PlacesMapProps) {

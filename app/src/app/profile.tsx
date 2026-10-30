@@ -6,6 +6,7 @@ import { AuthForm } from '@/components/auth-form';
 import { Button, Field } from '@/components/form';
 import { LegalDocumentView } from '@/components/legal-document';
 import { Screen } from '@/components/screen';
+import { ContributorCard, MyLists } from '@/components/profile-sections';
 import { ModerationQueue, MySubmissions, ReportsQueue } from '@/components/submissions';
 import { ThemedText } from '@/components/themed-text';
 import type { LegalDocumentId } from '@/constants/legal';
@@ -129,6 +130,8 @@ function Account({ userId, email }: { userId: string; email: string }) {
       <ThemedText themeColor="textSecondary">{email}</ThemedText>
       {error && <ThemedText style={styles.error}>{error}</ThemedText>}
       <Button secondary label={t('profile.signOut')} onPress={() => neon.auth.signOut()} />
+      {profile && <ContributorCard userId={userId} />}
+      {profile && <MyLists userId={userId} />}
       {profile && <MySubmissions userId={userId} />}
       {profile && profile.role !== 'member' && <ModerationQueue />}
       {profile && profile.role !== 'member' && <ReportsQueue />}
