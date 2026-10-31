@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { MapSearch, type SearchPick } from '@/components/map-search.web';
-import { glassCss } from '@/constants/glass';
+import { lightGlassCss } from '@/constants/glass';
 import i18n from '@/i18n';
 import type { Cyclone } from '@/lib/cyclones';
 import type { PlaceMarker } from '@/lib/places';
@@ -311,12 +311,11 @@ export function PlacesMap({
         /* Phones zoom with two fingers, and the buttons would sit under the place card. */
         ${insets.bottom > 0 ? '.tafita-map .maplibregl-ctrl-group { display: none; }' : ''}
         .tafita-map .maplibregl-ctrl-group {
-          background: ${glassCss.background}; border: ${glassCss.border}; box-shadow: ${glassCss.boxShadow};
-          backdrop-filter: ${glassCss.backdropFilter ?? 'none'}; -webkit-backdrop-filter: ${glassCss.backdropFilter ?? 'none'};
+          background: ${lightGlassCss.background}; border: ${lightGlassCss.border}; box-shadow: ${lightGlassCss.boxShadow};
+          backdrop-filter: ${lightGlassCss.backdropFilter ?? 'none'}; -webkit-backdrop-filter: ${lightGlassCss.backdropFilter ?? 'none'};
           border-radius: 18px; overflow: hidden;
         }
-        .tafita-map .maplibregl-ctrl-group button + button { border-top-color: rgba(255, 246, 230, 0.16); }
-        .tafita-map .maplibregl-ctrl-group .maplibregl-ctrl-icon { filter: invert(1) brightness(1.1); }
+        .tafita-map .maplibregl-ctrl-group button + button { border-top-color: rgba(30, 58, 18, 0.12); }
       `}</style>
       <div ref={containerRef} style={styles.map} />
       <button
@@ -338,7 +337,7 @@ const styles = {
     left: 12,
     padding: '10px 14px',
     borderRadius: 999,
-    ...glassCss,
+    ...lightGlassCss,
     fontFamily: 'BricolageGrotesque_700Bold, sans-serif',
     cursor: 'pointer',
   },

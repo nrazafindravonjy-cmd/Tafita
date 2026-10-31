@@ -40,3 +40,33 @@ export const glassView: ViewStyle = {
   boxShadow: glassCss.boxShadow as string,
   ...(supported ? ({ backdropFilter: BLUR, WebkitBackdropFilter: BLUR } as ViewStyle) : null),
 };
+
+// Light cream glass for controls on the map, where dark glass turns muddy over
+// pale map tiles; Apple's Maps uses light glass for the same reason. Text on it
+// uses the deep green, since the logo green is too light to read on cream.
+export const lightGlassCss: CSSProperties = supported
+  ? {
+      background: 'rgba(255, 246, 230, 0.72)',
+      backdropFilter: BLUR,
+      WebkitBackdropFilter: BLUR,
+      border: '1px solid rgba(30, 58, 18, 0.12)',
+      boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 10px 30px rgba(30, 58, 18, 0.18)',
+      color: '#1E3A12',
+    }
+  : {
+      background: 'rgba(255, 246, 230, 0.98)',
+      border: '1px solid rgba(30, 58, 18, 0.12)',
+      boxShadow: '0 10px 30px rgba(30, 58, 18, 0.18)',
+      color: '#1E3A12',
+    };
+
+export const lightGlassView: ViewStyle = {
+  backgroundColor: lightGlassCss.background as string,
+  borderWidth: 1,
+  borderColor: 'rgba(30, 58, 18, 0.12)',
+  boxShadow: lightGlassCss.boxShadow as string,
+  ...(supported ? ({ backdropFilter: BLUR, WebkitBackdropFilter: BLUR } as ViewStyle) : null),
+};
+
+// Text colours that stay readable on the light glass.
+export const OnLightGlass = { text: '#1E3A12', secondary: '#4F5D45', accent: '#2F6B17' } as const;

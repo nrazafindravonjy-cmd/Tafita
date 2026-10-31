@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
-import { glassView } from '@/constants/glass';
+import { lightGlassView, OnLightGlass } from '@/constants/glass';
 import { Brand, Colors, Spacing } from '@/constants/theme';
 import { loadCoverPhotos, previewUrl, type CoverPhoto } from '@/lib/place-photos';
 import type { PlaceMarker } from '@/lib/places';
@@ -43,7 +43,7 @@ export function PlacePreview({ place, onOpen, onClose, bottom }: PlacePreviewPro
             {place.name}
           </ThemedText>
           {place.region && (
-            <ThemedText type="small" themeColor="textSecondary">
+            <ThemedText type="small" style={styles.region}>
               {place.region}
             </ThemedText>
           )}
@@ -72,15 +72,16 @@ const styles = StyleSheet.create({
     padding: Spacing.two,
     paddingRight: Spacing.three,
     borderRadius: 26,
-    ...glassView,
+    ...lightGlassView,
   },
   photo: { width: 84, height: 84, borderRadius: 16 },
   noPhoto: { backgroundColor: Colors.dark.backgroundSelected },
   text: { flex: 1, gap: 2 },
-  category: { color: Brand.green, fontSize: 12, lineHeight: 16 },
-  name: { fontSize: 19, lineHeight: 22, fontFamily: 'BricolageGrotesque_800ExtraBold' },
-  chevron: { fontSize: 30, lineHeight: 32, color: Brand.cream },
-  closeText: { fontSize: 13, lineHeight: 16, color: Brand.ink, fontFamily: 'BricolageGrotesque_800ExtraBold' },
+  category: { color: OnLightGlass.accent, fontSize: 12, lineHeight: 16 },
+  region: { color: OnLightGlass.secondary },
+  name: { fontSize: 19, lineHeight: 22, fontFamily: 'BricolageGrotesque_800ExtraBold', color: OnLightGlass.text },
+  chevron: { fontSize: 30, lineHeight: 32, color: OnLightGlass.text },
+  closeText: { fontSize: 13, lineHeight: 16, color: Brand.cream, fontFamily: 'BricolageGrotesque_800ExtraBold' },
   close: {
     position: 'absolute',
     top: -10,
@@ -90,6 +91,6 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: Brand.cream,
+    backgroundColor: OnLightGlass.text,
   },
 });

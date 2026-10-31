@@ -2,7 +2,7 @@ import { Search } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { glassCss } from '@/constants/glass';
+import { lightGlassCss } from '@/constants/glass';
 import { searchMadagascar, type GeocodeResult } from '@/lib/geocode';
 import type { PlaceMarker } from '@/lib/places';
 import { loadSearchIndex, normalize, searchIndex } from '@/lib/search-index';
@@ -126,8 +126,8 @@ const styles = {
     padding: '12px 16px',
     border: 'none',
     borderRadius: 999,
-    ...glassCss,
-    color: '#D7DECB',
+    ...lightGlassCss,
+    color: '#4F5D45',
     fontSize: 16,
     fontFamily: 'BricolageGrotesque_500Medium, sans-serif',
     textAlign: 'left',
@@ -144,17 +144,17 @@ const styles = {
     gap: 4,
     padding: 8,
     borderRadius: 22,
-    ...glassCss,
+    ...lightGlassCss,
   },
   row: { display: 'flex', gap: 6 },
   input: {
     flex: 1,
     minWidth: 0,
     padding: '6px 10px',
-    border: '1px solid rgba(255, 246, 230, 0.2)',
+    border: '1px solid rgba(30, 58, 18, 0.18)',
     borderRadius: 999,
-    background: 'rgba(255, 246, 230, 0.1)',
-    color: '#FFF6E6',
+    background: 'rgba(255, 255, 255, 0.6)',
+    color: '#1E3A12',
     fontSize: 16,
     fontFamily: 'BricolageGrotesque_400Regular, sans-serif',
   },
@@ -167,17 +167,17 @@ const styles = {
     fontFamily: 'BricolageGrotesque_700Bold, sans-serif',
     cursor: 'pointer',
   },
-  close: { border: 'none', background: 'transparent', color: '#FFF6E6', cursor: 'pointer', fontSize: 16 },
+  close: { border: 'none', background: 'transparent', color: '#1E3A12', cursor: 'pointer', fontSize: 16 },
   result: {
     textAlign: 'left',
     padding: '6px 8px',
     border: 'none',
     borderRadius: 12,
-    background: 'rgba(255, 246, 230, 0.08)',
-    color: '#FFF6E6',
+    background: 'rgba(30, 58, 18, 0.06)',
+    color: '#1E3A12',
     cursor: 'pointer',
     fontSize: 14,
     fontFamily: 'BricolageGrotesque_400Regular, sans-serif',
   },
-  status: { padding: '4px 8px', fontSize: 14, color: '#D7DECB' },
+  status: { padding: '4px 8px', fontSize: 14, color: '#4F5D45' },
 } satisfies Record<string, React.CSSProperties>;
